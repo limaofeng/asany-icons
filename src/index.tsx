@@ -21,7 +21,7 @@ export default {
 };
 
 function svg2ttf(buffer: any) {
-  let options: any = { combinePath: true }; //program.setting.get('ie').import;
+  let options: any = { combinePath: false }; //program.setting.get('ie').import;
   options.type = 'svg';
   return font.create(buffer, options).data;
 }
@@ -84,29 +84,63 @@ function loadTTFFile(file: any, option: any) {
 // Delete me
 export const Thing = () => {
   const GLYF_ITEM_TPL =
-    '<svg width="1em" height="1em" viewbox="0 0 ${unitsPerEm} ${unitsPerEm}" fill="currentColor">' +
-    '<g transform="scale(1, -1) translate(0, -${translateY})"><path fillOpacity=".8" ${d}/></g>' +
+    '<svg width="${width}" height="1em" viewbox="0 0 ${viewboxWidth} ${viewboxHeight}" fill="currentColor">' +
+    '<g transform="scale(1, -1) translate(${translateX}, -${translateY})"><path fillOpacity=".8" ${d}/></g>' +
     '</svg>';
 
   const getGlyfHTML = (glyf: any, ttf: any, opt: any) => {
+    let width = '1em';
+    let viewboxWidth = Math.floor(
+      Math.max(glyf.xMax + glyf.xMin / 2, opt.unitsPerEm)
+    );
+    const viewboxHeight = Math.max(glyf.yMax + glyf.yMin, opt.unitsPerEm);
+
+    /*     if (viewboxWidth > opt.unitsPerEm) {
+      if (viewboxWidth - opt.unitsPerEm < opt.unitsPerEm / 5) {
+        // viewboxWidth = opt.unitsPerEm;
+      } else {
+        width = '2em';
+      }
+    } */
+
     let g: any = {
       index: opt.index,
       compound: glyf.compound ? 'compound' : '',
       selected: opt.selected ? 'selected' : '',
       editing: opt.editing ? 'editing' : '',
       modify: glyf.modify,
+      width,
+      viewboxWidth,
+      viewboxHeight,
       unitsPerEm: opt.unitsPerEm,
-      translateY: opt.unitsPerEm + opt.descent,
+      translateX: 0, //(1024 - width) / 2,
+      translateY: viewboxHeight + opt.descent,
       unicode: (glyf.unicode || [])
         .map(function(u: any) {
           return '$' + u.toString(16).toUpperCase();
         })
         .join(','),
       name: string.encodeHTML(glyf.name || ''),
-      fillColor: opt.color ? 'style="fill:' + opt.color + '"' : '',
+      // fillColor: opt.color ? 'style="fill:' + opt.color + '"' : '',
     };
 
-    console.log(glyf.name);
+    /*    if (viewboxWidth > 1024 || viewboxHeight > 1024) {
+      console.log(
+        'xxxx',
+        g.unicode,
+        viewboxWidth,
+        viewboxHeight,
+        glyf.xMax,
+        glyf.yMax,
+        glyf.xMin,
+        glyf.yMin
+      );
+    } */
+
+    // if (glyf.name == 'stripe') {
+    //   console.log(glyf, glyf.name);
+    //   console.log(glyf2svg(glyf, ttf));
+    // }
 
     let d = '';
     if ((d = glyf2svg(glyf, ttf))) {
@@ -149,7 +183,12 @@ export const Thing = () => {
         )
       );
 
-      const iconObjects: { content: any; name: any }[] = [];
+      const iconObjects: {
+        content: any;
+        name: any;
+        unicode: any;
+        tags: string[];
+      }[] = [];
 
       const _icons = ttf.glyf
         .filter(
@@ -168,10 +207,46 @@ export const Thing = () => {
             editing: false,
             color: '#000',
           });
-          iconObjects.push({ content: glyfStr, name: glyf.name });
+          const tags: string[] = [];
+
+          if (glyf.name) {
+            const codes =
+              'au,fj,nc,nz,pg,sb,vu,ar,bo,br,bs,bz,ca,cl,co,cr,cu,do,ec,fk,gf,gt,gy,hn,ht,jm,mx,ni,pa,pe,pr,py,sr,sv,tt,uy,ve,mt,ad,li,lu,sj,lt,lv,ee,ru,gl,no,se,fi,cy,xk,rs,hr,ba,me,mk,by,si,hu,md,ro,al,bg,sk,cz,ua,tr,gr,dk,at,nl,be,ch,pl,pt,es,it,fr,de,ie,is,uk,bb,dm,gd,gp,mq,pm,vc,lc,tc,aq,tf,hm,gs,fo,ge,am,az,ao,bf,bw,cd,cf,cg,ci,cm,dz,eg,et,ga,gn,iq,ir,jo,ke,ly,ma,mg,ml,mr,mw,mz,na,ne,ng,sa,sd,sn,so,ss,td,tn,tz,za,zm,zw,ph,id,my,bn,tl,th,kh,vn,la,jp,tw,kr,kp,bd,bt,np,lk,in,mn,tj,kg,pk,af,tm,uz,kz,cn,il,ps,lb,kw,bh,qa,om,ye,ae,rw,re,cv,gq,dj,bi,sz,ls,eh,er,ug,gw,gm,sl,lr,gh,tg,bj,mm,sy,st,mc,sm,sg,vg,vi,bl,ai,cw,bq,aw,sx,ms,mf,ky,kn,bm,ar-alt,bv,pn,pf,nu,pw,fm,tk,nr,ck,ki,to,tv,mp,wf,nf,cc,gu,cx,as,ws,pt-alt,es-alt,gi,va,hk,ie-alt,sh-tc,sh-ai,sh-sh,sc,mv,mu,io,mo,mh,km,je,im,gg,yt,ag';
+            if (
+              glyf.name == 'wrld' ||
+              glyf.name.startsWith('wrld-') ||
+              glyf.name.startsWith('glb-')
+            ) {
+              tags.push('地图/世界');
+            } else if (glyf.name == 'ca' || glyf.name.startsWith('ca-')) {
+              tags.push('地图/国家/加拿大');
+            } else if (glyf.name == 'au' || glyf.name.startsWith('au-')) {
+              tags.push('地图/国家/澳大利亚');
+            } else if (glyf.name == 'uk' || glyf.name.startsWith('uk-')) {
+              tags.push('地图/国家/英国');
+            } else if (glyf.name == 'us' || glyf.name.startsWith('us-')) {
+              tags.push('地图/国家/美国');
+            } else if (codes.indexOf(glyf.name) > -1) {
+              tags.push('地图/国家');
+            } else {
+              tags.push('其他');
+            }
+          }
+
+          iconObjects.push({
+            content: glyfStr,
+            unicode: (glyf.unicode || [])
+              .map(function(u: any) {
+                return '$' + u.toString(16).toUpperCase();
+              })
+              .join(','),
+            tags,
+            name: glyf.name,
+          });
           return glyfStr;
         });
 
+      // console.log(client, gql);
       const options = {
         mutation: gql`
           mutation($icons: [IconInput]!) {
@@ -199,7 +274,7 @@ export const Thing = () => {
     <div>
       <input type="file" onChange={handleFile} />
       <div
-        style={{ width: 100, overflow: 'auto' }}
+        style={{ width: '100%', overflow: 'auto', padding: '10px' }}
         dangerouslySetInnerHTML={{ __html: state.join('') }}
       />
     </div>
