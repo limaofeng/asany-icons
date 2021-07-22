@@ -4,16 +4,16 @@ import React, { useState } from 'react';
 import font from 'fonteditor-core/lib/ttf/font';
 import glyf2svg from 'fonteditor-core/lib/ttf/util/glyf2svg';
 import string from 'fonteditor-core/lib/common/string';
-import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
+// import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
 
 export { default as IconPicker } from './IconPicker';
 
-const client = new ApolloClient({
-  uri: 'http://localhost:8080/graphql',
-  cache: new InMemoryCache(),
-});
+// const client = new ApolloClient({
+//   uri: 'http://localhost:8080/graphql',
+//   cache: new InMemoryCache(),
+// });
 
-console.log('client', client);
+// console.log('client', client);
 // console.log('client', client);
 
 export default {
@@ -247,21 +247,21 @@ export const Thing = () => {
         });
 
       // console.log(client, gql);
-      const options = {
-        mutation: gql`
-          mutation($icons: [IconInput]!) {
-            importIcons(library: "1", icons: $icons) {
-              id
-              name
-            }
-          }
-        `,
-        variables: {
-          icons: iconObjects,
-        },
-      };
+      // const options = {
+      //   mutation: gql`
+      //     mutation($icons: [IconInput]!) {
+      //       importIcons(library: "1", icons: $icons) {
+      //         id
+      //         name
+      //       }
+      //     }
+      //   `,
+      //   variables: {
+      //     icons: iconObjects,
+      //   },
+      // };
 
-      client.mutate(options);
+      // client.mutate(options);
 
       setState(_icons);
     } catch (exp) {

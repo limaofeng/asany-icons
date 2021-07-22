@@ -1345,6 +1345,18 @@
   resolved "https://registry.npm.taobao.org/@types/json5/download/@types/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
 
+"@types/lodash-es@^4.17.4":
+  version "4.17.4"
+  resolved "https://registry.npmjs.org/@types/lodash-es/-/lodash-es-4.17.4.tgz#b2e440d2bf8a93584a9fd798452ec497986c9b97"
+  integrity sha512-BBz79DCJbD2CVYZH67MBeHZRX++HF+5p8Mo5MzjZi64Wac39S3diedJYHZtScbRVf4DjZyN6LzA0SB0zy+HSSQ==
+  dependencies:
+    "@types/lodash" "*"
+
+"@types/lodash@*":
+  version "4.14.171"
+  resolved "https://registry.npmjs.org/@types/lodash/-/lodash-4.14.171.tgz#f01b3a5fe3499e34b622c362a46a609fdb23573b"
+  integrity sha512-7eQ2xYLLI/LsicL2nejW9Wyko3lcpN6O/z0ZLHrEQsg280zIdCv1t/0m6UtBjUHokCGBQ3gYTbHzDkZ1xOBwwg==
+
 "@types/node@*":
   version "15.12.4"
   resolved "https://registry.nlark.com/@types/node/download/@types/node-15.12.4.tgz#e1cf817d70a1e118e81922c4ff6683ce9d422e26"
@@ -3273,6 +3285,11 @@ detect-newline@^3.0.0:
   version "3.1.0"
   resolved "https://registry.nlark.com/detect-newline/download/detect-newline-3.1.0.tgz#576f5dfc63ae1a192ff192d8ad3af6308991b651"
   integrity sha1-V29d/GOuGhkv8ZLYrTr2MImRtlE=
+
+dexie@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.npmjs.org/dexie/-/dexie-3.0.3.tgz#ede63849dfe5f07e13e99bb72a040e8ac1d29dab"
+  integrity sha512-BSFhGpngnCl1DOr+8YNwBDobRMH0ziJs2vts69VilwetHYOtEDcLqo7d/XiIphM0tJZ2rPPyAGd31lgH2Ln3nw==
 
 diff-sequences@^25.2.6:
   version "25.2.6"
@@ -5719,6 +5736,11 @@ locate-path@^5.0.0:
   integrity sha1-Gvujlq/WdqbUJQTQpno6frn2KqA=
   dependencies:
     p-locate "^4.1.0"
+
+lodash-es@^4.17.21:
+  version "4.17.21"
+  resolved "https://registry.npmjs.org/lodash-es/-/lodash-es-4.17.21.tgz#43e626c46e6591b7750beb2b50117390c609e3ee"
+  integrity sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==
 
 lodash.camelcase@^4.3.0:
   version "4.3.0"
