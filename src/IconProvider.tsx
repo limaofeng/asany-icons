@@ -1,25 +1,7 @@
-import { gql } from '@apollo/client';
 import { withApollo, WithApolloClient } from '@apollo/client/react/hoc';
 import React, { useEffect, useReducer } from 'react';
 import Icon from './Icon';
 import store from './store';
-
-const ALL_ICON_LIBRARIES = gql`
-  query libraries {
-    libraries: iconLibraries {
-      id
-      name
-      description
-      icons {
-        id
-        name
-        tags
-        unicode
-        content
-      }
-    }
-  }
-`;
 
 export const IconContext = React.createContext({});
 
@@ -102,16 +84,18 @@ function IconProvider(props: WithApolloClient<IconProviderProps>) {
     }
     console.log(data);
     dispatch({ type: 'init', payload: data.iconLibraries }); */
-    client!
+    store(client!);
+
+/*     client!
       .query({
         query: ALL_ICON_LIBRARIES,
         fetchPolicy: 'no-cache',
       })
       .then(data => {
         console.log('data', data);
-      });
+      }); */
 
-    console.log(store);
+      // console.log(store);
     // xxx
   }, []);
 

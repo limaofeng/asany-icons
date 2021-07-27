@@ -72,6 +72,7 @@
     "fonteditor-core": "^2.1.7",
     "graphql": "^15.5.1",
     "inflate": "0.0.7",
-    "lodash-es": "^4.17.21"
+    "lodash-es": "^4.17.21",
+    "moment": "^2.29.1"
   }
 }
