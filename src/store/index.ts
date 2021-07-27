@@ -35,7 +35,7 @@ const QUERY_CHECK_POINT = gql`
 
 const QUERY_LIBRARIES = gql`
   query libraries($ids: [ID]) {
-    iconLibraries(filter: { id_in: $ids }) {
+    libraries: iconLibraries(filter: { id_in: $ids }) {
       id
       name
       description
@@ -63,6 +63,7 @@ async function deltaKeys(logs: any[], table: Dexie.Table) {
     .filter((item: any) => item.operation === 'DELETE')
     .map((item: any) => item.primarykeyValue);
   for (const id of removeIds) {
+    console.log('删除:', table.name, id);
     await table.delete(id);
   }
   // 查询具体数据
@@ -76,15 +77,15 @@ async function deltaKeys(logs: any[], table: Dexie.Table) {
   return updateIds;
 }
 
-async function deltaUpdates(icons: any[], table: Dexie.Table) {
+async function deltaUpdates(items: any[], table: Dexie.Table) {
   db.transaction('rw', table, async () => {
-    for (const { __typename, ...icon } of icons) {
-      if ((await table.where({ id: icon.id }).count()) == 0) {
-        console.log('新增图标:', icon.unicode);
-        table.add({ ...icon });
+    for (const { __typename, ...item } of items) {
+      if ((await table.where({ id: item.id }).count()) == 0) {
+        console.log('新增:', table.name, item);
+        table.add({ ...item });
       } else {
-        console.log('更新图标:', icon.unicode);
-        table.update(icon.id, { ...icon });
+        console.log('更新:', table.name, item);
+        table.update(item.id, { ...item });
       }
     }
   });
@@ -165,33 +166,37 @@ export default async (client: ApolloClient<any>) => {
     (item: any) => item.entityName == 'IconLibrary'
   );
 
-  const libIds = await deltaKeys(liblogs, db.icons);
+  const libIds = await deltaKeys(liblogs, db.libraries);
 
-  const {
-    data: { libraries },
-  } = await client.query({
-    query: QUERY_LIBRARIES,
-    variables: {
-      ids: libIds,
-    },
-  });
+  if (libIds.length) {
+    const {
+      data: { libraries },
+    } = await client.query({
+      query: QUERY_LIBRARIES,
+      variables: {
+        ids: libIds,
+      },
+    });
 
-  await deltaUpdates(libraries, db.libraries);
+    await deltaUpdates(libraries, db.libraries);
+  }
 
   const iconlogs = data.oplogs.filter((item: any) => item.entityName == 'Icon');
 
   const iconIds = await deltaKeys(iconlogs, db.icons);
 
-  const {
-    data: { icons },
-  } = await client.query({
-    query: QUERY_ICONS,
-    variables: {
-      ids: iconIds,
-    },
-  });
+  if (iconIds.length) {
+    const {
+      data: { icons },
+    } = await client.query({
+      query: QUERY_ICONS,
+      variables: {
+        ids: iconIds,
+      },
+    });
 
-  await deltaUpdates(icons, db.icons);
+    await deltaUpdates(icons, db.icons);
+  }
 
   await updatePoint(pointIcon, libraryIcon);
 };
