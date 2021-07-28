@@ -84,9 +84,28 @@ function IconProvider(props: WithApolloClient<IconProviderProps>) {
     }
     console.log(data);
     dispatch({ type: 'init', payload: data.iconLibraries }); */
-    store(client!);
+    store.loadRemote(client!);
 
-/*     client!
+    console.time('load libraries')
+    store.libraries('1', '302').then(libraries => {
+      console.log(libraries);
+      console.timeEnd('load libraries')
+    });
+
+
+    console.time('loadIcons')
+    store.icons('1').then(icons => {
+      console.log('icons', icons);
+      console.timeEnd('loadIcons')
+    });
+
+    console.time('loadTag')
+    store.tags('1').then(tags => {
+      console.log('tags', tags);
+      console.timeEnd('loadTag')
+    });
+
+    /*     client!
       .query({
         query: ALL_ICON_LIBRARIES,
         fetchPolicy: 'no-cache',
@@ -95,7 +114,7 @@ function IconProvider(props: WithApolloClient<IconProviderProps>) {
         console.log('data', data);
       }); */
 
-      // console.log(store);
+    // console.log(store);
     // xxx
   }, []);
 

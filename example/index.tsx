@@ -14,12 +14,11 @@ const App = () => {
   console.log('client:', client);
   return (
     <div>
-      为什么没有东西:
-    <ApolloProvider client={client}>
-      <IconProvider>
-        <Icon name="xxx" />
-      </IconProvider>
-    </ApolloProvider>
+      <ApolloProvider client={client}>
+        <IconProvider>
+          <Icon name="nifty/us-la" />
+        </IconProvider>
+      </ApolloProvider>
     </div>
   );
 };

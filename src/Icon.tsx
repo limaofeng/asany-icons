@@ -1,5 +1,7 @@
 import React, { ComponentType } from 'react';
 import { upperFirst } from 'lodash-es';
+import { useIcon } from './store/hook/useIcon';
+import classnames from 'classnames';
 
 export enum IconThemeType {
   Line = 'Line',
@@ -24,22 +26,20 @@ export interface IconProps {
 }
 
 function Icon(props: IconProps) {
-  let { name, theme = 'Line', onClick, className, style, type } = props;
-  if (type) {
-    name = type;
-  }
-  if (!name) {
-    return null;
-  }
-  let fullname = upperFirst(name);
-  if (!fullname.endsWith(theme) || allIcons[fullname + theme]) {
-    fullname += theme;
-  }
-  const icon = allIcons[name] || allIcons[fullname];
-  if (!icon) {
-    return null;
-  }
-  return React.createElement(icon, { className, onClick, style: { ...style } });
+  let { name, onClick, className, style } = props;
+  const svg = useIcon(name);
+  return (
+    <span
+      onClick={onClick}
+      role="img"
+      aria-label={name}
+      style={style}
+      className={classnames(className, `anticon ${name}`)}
+      dangerouslySetInnerHTML={{
+        __html: svg!,
+      }}
+    />
+  );
 }
 
 export const renderIcon = (id: string) => {
