@@ -1,9 +1,13 @@
 import 'react-app-polyfill/ie11';
+
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import IconProvider from '../src/IconProvider';
-import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
-import Icon from '../src/Icon';
+
+import { Icon, IconProvider, useStore } from '../src';
+import { useEffect } from 'react';
+
+import IconDisplay from './IconDisplay';
 
 const client = new ApolloClient({
   uri: 'http://localhost:8080/graphql',
@@ -11,12 +15,25 @@ const client = new ApolloClient({
 });
 
 const App = () => {
-  console.log('client:', client);
+  const store = useStore();
+
+  const handleFile = e => {
+    const files = e.target.files;
+    store.import('302', files[0]);
+  };
+
   return (
     <div>
       <ApolloProvider client={client}>
         <IconProvider>
+          <h3>图标加载：</h3>
           <Icon name="nifty/us-la" />
+          <br />
+          <div style={{ marginTop: 50 }}>
+            <h3>图标解析：</h3>
+            <input type="file" onChange={handleFile} />
+            <IconDisplay />
+          </div>
         </IconProvider>
       </ApolloProvider>
     </div>

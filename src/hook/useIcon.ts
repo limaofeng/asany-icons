@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Icon } from '../IconDatabase';
-import store from '../index';
+import { Icon } from '../store/IconDatabase';
+import { useStore } from './useStore';
 
 export const useIcon = (name: string): string | undefined => {
+  const store = useStore();
   const [icon, setIcon] = useState<Icon | undefined>(undefined);
 
   useEffect(() => {

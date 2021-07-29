@@ -1,27 +1,18 @@
-import React, { ComponentType } from 'react';
-import { upperFirst } from 'lodash-es';
-import { useIcon } from './store/hook/useIcon';
 import classnames from 'classnames';
+import React, { ComponentType, CSSProperties } from 'react';
 
-export enum IconThemeType {
-  Line = 'Line',
-  Solid = 'Solid',
-}
+import { useIcon } from './hook/useIcon';
+
 interface SortType {
   id: string;
   name: string;
 }
 
-const allIcons: {
-  [key: string]: any;
-} = {};
-
 export interface IconProps {
   name: string;
-  theme?: IconThemeType;
   onClick?: (e: React.MouseEvent) => void;
   className?: string;
-  style?: object;
+  style?: CSSProperties;
   type?: string;
 }
 
@@ -42,29 +33,8 @@ function Icon(props: IconProps) {
   );
 }
 
-export const renderIcon = (id: string) => {
-  return Icon({ name: id });
-};
-
 Icon.register = (key: string, icon: ComponentType<any>, _?: SortType) => {
-  allIcons[key] = icon;
-  if (key.startsWith('global')) {
-    allIcons[key.substr(7)] = icon;
-  }
-  //   if (sort) {
-  //     let found = false;
-  //     for (let i = 0; i < categories.length; i++) {
-  //       if (categories[i].id === sort.id) {
-  //         found = true;
-  //         categories[i].icons.push(key);
-  //         break;
-  //       }
-  //     }
-  //     if (!found) {
-  //       categories.push({ ...sort, icons: [key] });
-  //     }
-  //   }
-  // };
+  console.warn('key:', key, 'icon:', icon);
 };
 
 export default Icon;

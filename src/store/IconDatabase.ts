@@ -14,6 +14,8 @@ export interface IconLibrary {
   id?: string;
   name?: string;
   description?: string;
+  tags: IconTag[];
+  icons: Icon[];
 }
 
 export interface IconTag {

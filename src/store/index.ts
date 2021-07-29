@@ -8,9 +8,24 @@ import IconDatabase, {
 import moment from 'moment';
 import { xorWith } from 'lodash-es';
 import { EventEmitter } from 'events';
+import { parseFiles } from '../utils';
 
 const db = new IconDatabase();
 const events = new EventEmitter();
+
+const IMPORT_ICONS = gql`
+  mutation($library: ID!, $icons: [IconInput]!) {
+    icons: importIcons(library: $library, icons: $icons) {
+      id
+      name
+      tags
+      unicode
+      content
+      description
+      library: libraryId
+    }
+  }
+`;
 
 const ALL_ICON_LIBRARIES = gql`
   {
@@ -148,6 +163,7 @@ async function deltaUpdates(items: any[], table: Dexie.Table) {
       }
     }
   });
+  events.emit('change');
 }
 
 const updatePoint = async (time: Date, ...points: CheckPoint[]) => {
@@ -278,8 +294,13 @@ const parseTag = async (
   }
 };
 
-export default {
-  loadRemote: async (client: ApolloClient<any>) => {
+class IconStore {
+  private _client?: ApolloClient<any>;
+
+  setClient(client: ApolloClient<any>) {
+    this._client = client;
+  }
+  async loadRemote() {
     const now = new Date();
 
     let libraryIcon = await db.checkpoints.get('library');
@@ -291,7 +312,7 @@ export default {
       await db.checkpoints.clear();
       await db.tags.clear();
 
-      const { data } = await client.query({
+      const { data } = await this._client!.query({
         query: ALL_ICON_LIBRARIES,
       });
 
@@ -306,7 +327,7 @@ export default {
     }
 
     // 查询增量数据
-    const { data } = await client.query({
+    const { data } = await this._client!.query({
       query: QUERY_CHECK_POINT,
       variables: {
         filter: {
@@ -325,7 +346,7 @@ export default {
     if (libIds.length) {
       const {
         data: { libraries },
-      } = await client.query({
+      } = await this._client!.query({
         query: QUERY_LIBRARIES,
         variables: {
           ids: libIds,
@@ -344,7 +365,7 @@ export default {
     if (iconIds.length) {
       const {
         data: { icons },
-      } = await client.query({
+      } = await this._client!.query({
         query: QUERY_ICONS,
         variables: {
           ids: iconIds,
@@ -355,22 +376,31 @@ export default {
     }
 
     await updatePoint(now, pointIcon, libraryIcon);
-  },
-  libraries: async (...ids: string[]): Promise<IconLibrary[]> => {
+  }
+  async libraries(...ids: string[]): Promise<IconLibrary[]> {
     return await db.transaction(
       'readonly',
       db.libraries,
       db.icons,
+      db.tags,
       async () => {
-        const libs = await (ids.length
-          ? db.libraries.where('id').anyOf(ids)
-          : db.libraries
-        ).toArray();
+        const libs = (
+          await (ids.length
+            ? db.libraries.where('id').anyOf(ids)
+            : db.libraries
+          ).toArray()
+        ).map(item => ({ ...item }));
+
+        for (const lib of libs) {
+          lib.tags = await this.tags(lib.id!);
+          lib.icons = await this.icons(lib.id!);
+        }
+
         return libs;
       }
     );
-  },
-  icons: async (library: string, tag?: string): Promise<IconLibrary[]> => {
+  }
+  async icons(library: string, tag?: string): Promise<Icon[]> {
     return await db.transaction('readonly', db.icons, async () => {
       let where = db.icons.where({ library });
       if (tag) {
@@ -380,24 +410,45 @@ export default {
       }
       return await where.toArray();
     });
-  },
-  tags: async (library: string): Promise<IconTag[]> => {
+  }
+  async tags(library: string): Promise<IconTag[]> {
     return await db.transaction('readonly', db.tags, db.icons, async () => {
       return db.tags.where({ library }).toArray();
     });
-  },
-  on: (eventName: string, callback: (icon: Icon) => void): (() => void) => {
+  }
+  onChange(callback: () => void): () => void {
+    events.on('change', callback);
+    return () => events.off('change', callback);
+  }
+  on(eventName: string, callback: (icon: Icon) => void): () => void {
     events.on('icons:' + eventName, callback);
     return () => events.off('icons:' + eventName, callback);
-  },
-  get: (name: string): Promise<Icon | undefined> => {
+  }
+  get(name: string): Promise<Icon | undefined> {
     const [library, icon] = name.split('/');
     return db.transaction('readonly', db.libraries, db.icons, async () => {
       const lib = await db.libraries.where({ name: library }).first();
       if (!lib) {
         return undefined;
       }
-      return db.icons.where({ library: lib!.id!, name: icon }).first();
+      return db.icons
+        .where({ library: lib!.id!, name: icon })
+        .or('unicode')
+        .equals(icon)
+        .first();
     });
-  },
-};
+  }
+  async import(library: string, file: File) {
+    const icons = await parseFiles(file);
+    const { data } = await this._client!.mutate({
+      mutation: IMPORT_ICONS,
+      variables: {
+        library,
+        icons,
+      },
+    });
+    await deltaUpdates(data.icons, db.icons);
+  }
+}
+
+export default IconStore;
