@@ -41,6 +41,7 @@
   "name": "asany-icons",
   "author": "李茂峰",
   "module": "dist/asany-icons.esm.js",
+  "repository": "https://github.com/limaofeng/asany-icons",
   "size-limit": [
     {
       "path": "dist/asany-icons.cjs.production.min.js",
