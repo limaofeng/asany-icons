@@ -1,3 +1,12 @@
+## [0.1.2](https://github.com/limaofeng/asany-icons/compare/v0.1.1...v0.1.2) (2021-07-30)
+
+
+### Features
+
+* 支持本地库 ([26a1da6](https://github.com/limaofeng/asany-icons/commit/26a1da6f7caf229f8fff48ef9447f24fac3fbde9))
+
+
+
 ## [0.1.1](https://github.com/limaofeng/asany-icons/compare/v0.1.0...v0.1.1) (2021-07-30)
 
 
