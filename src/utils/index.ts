@@ -65,7 +65,7 @@ function loadTTFFile(file: any, option: any) {
 
 const GLYF_ITEM_TPL =
   '<svg width="${width}" height="1em" viewbox="0 0 ${viewboxWidth} ${viewboxHeight}" fill="currentColor">' +
-  '<g transform="scale(1, -1) translate(${translateX}, -${translateY})"><path fillOpacity=".8" ${d}/></g>' +
+  '<g transform="scale(1, -1) translate(${translateX}, -${translateY})"><path fill-opacity=".8" ${d}/></g>' +
   '</svg>';
 
 const getGlyfHTML = (glyf: any, ttf: any, opt: any) => {

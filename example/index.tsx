@@ -4,7 +4,7 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { Icon, IconProvider, store, useStore } from '../src';
+import { Icon, IconProvider, store } from '../src';
 
 import IconDisplay from './IconDisplay';
 
