@@ -1,3 +1,12 @@
+## [0.1.3](https://github.com/limaofeng/asany-icons/compare/v0.1.2...v0.1.3) (2021-07-30)
+
+
+### Features
+
+* 支持直接导出 store 对象 ([4893cca](https://github.com/limaofeng/asany-icons/commit/4893cca6e24c984e59a473779cca92010257cad3))
+
+
+
 ## [0.1.2](https://github.com/limaofeng/asany-icons/compare/v0.1.1...v0.1.2) (2021-07-30)
 
 
