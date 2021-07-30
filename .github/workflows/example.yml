@@ -17,10 +17,16 @@ jobs:
       - name: Install deps and build (with cache)
         uses: bahmutov/npm-install@v1
 
+      - name: Install deps and build example (with cache)
+        uses: bahmutov/npm-install@v1
+        with:
+          working-directory: example
+
       - name: Install and Build 🔧
         run: | 
           yarn build
-          cd example && yarn run build
+        with:
+          working-directory: example
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@3.6.2
