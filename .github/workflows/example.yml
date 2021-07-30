@@ -14,13 +14,13 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - name: Install deps and build
+      - name: Install deps
         run: yarn
         working-directory: |
           ./
           example
 
-      - name: Install and Build 🔧
+      - name: Build 🔧
         run: yarn build
         working-directory: example
 
