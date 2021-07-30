@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useCallback } from 'react';
 import { useEffect, useState } from 'react';
 import { Icon, useStore } from '../src';
 import { IconLibrary } from '../src/store/IconDatabase';
@@ -8,20 +9,17 @@ function IconDisplay() {
 
   const [libraries, setLibraries] = useState<IconLibrary[]>([]);
 
-  useEffect(() => {
+  const loadLibraries = useCallback(async () => {
     console.time('load libraries');
-    store.libraries().then(libraries => {
-      console.log('libraries', libraries);
-      setLibraries(libraries);
-      console.timeEnd('load libraries');
-    });
-    return store.onChange(async () => {
-      console.time('load libraries');
-      const libraries = await store.libraries();
-      console.log('libraries', libraries);
-      setLibraries(libraries);
-      console.timeEnd('load libraries');
-    });
+    const libraries = await store.libraries();
+    console.log('libraries', libraries);
+    setLibraries(libraries);
+    console.timeEnd('load libraries');
+  }, []);
+
+  useEffect(() => {
+    loadLibraries();
+    return store.onChange(loadLibraries);
   }, []);
 
   return (
