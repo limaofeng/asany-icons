@@ -8,7 +8,7 @@ import IconDatabase, {
 import moment from 'moment';
 import { xorWith } from 'lodash-es';
 import { EventEmitter } from 'events';
-import { parseFiles } from '../utils';
+import { parseFiles, sleep } from '../utils';
 
 const db = new IconDatabase();
 const events = new EventEmitter();
@@ -294,6 +294,13 @@ const parseTag = async (
   }
 };
 
+const LOCAL_LIBRARY = {
+  id: '0',
+  name: 'local',
+  description: '本地图标',
+  icons: [],
+};
+
 class IconStore {
   private _client?: ApolloClient<any>;
 
@@ -312,15 +319,19 @@ class IconStore {
       await db.checkpoints.clear();
       await db.tags.clear();
 
+      await saveLibrary(LOCAL_LIBRARY);
+
       const { data } = await this._client!.query({
         query: ALL_ICON_LIBRARIES,
       });
 
-      db.transaction('rw', db.libraries, db.icons, db.tags, async () => {
+      await db.transaction('rw', db.libraries, db.icons, db.tags, async () => {
         for (const lib of data.libraries) {
           await saveLibrary(lib);
         }
       });
+
+      events.emit('change');
 
       await updatePoint(now, { name: 'icon' }, { name: 'library' });
       return;
@@ -425,7 +436,9 @@ class IconStore {
     return () => events.off('icons:' + eventName, callback);
   }
   get(name: string): Promise<Icon | undefined> {
-    const [library, icon] = name.split('/');
+    const [library, icon] = name.includes('/')
+      ? name.split('/')
+      : [LOCAL_LIBRARY.name, name];
     return db.transaction('readonly', db.libraries, db.icons, async () => {
       const lib = await db.libraries.where({ name: library }).first();
       if (!lib) {
@@ -449,6 +462,53 @@ class IconStore {
     });
     await deltaUpdates(data.icons, db.icons);
   }
+  async addIcons(
+    icons: IconCreateObject[],
+    library: string = LOCAL_LIBRARY.id
+  ) {
+    let retry = 0,
+      lib = await db.libraries.get(library);
+    if (!lib && retry < 5) {
+      await sleep(250);
+      lib = await db.libraries.get(library);
+      retry++;
+    }
+
+    if (!lib) {
+      throw `库{${library}}未发现`;
+    }
+
+    await deltaUpdates(
+      icons.map(({ svg: content, tags = [], ...item }) => ({
+        ...item,
+        id: `${library}-${item.name}`,
+        tags,
+        content,
+        library,
+      })),
+      db.icons
+    );
+  }
+  async local() {
+    return await db.transaction(
+      'readonly',
+      db.libraries,
+      db.icons,
+      db.tags,
+      async () => {
+        const lib = await db.libraries.get(LOCAL_LIBRARY.id);
+        lib!.tags = await this.tags(LOCAL_LIBRARY.id);
+        lib!.icons = await this.icons(LOCAL_LIBRARY.id);
+        return lib!;
+      }
+    );
+  }
 }
+
+type IconCreateObject = {
+  name: string;
+  svg: string;
+  tags?: string[];
+};
 
 export default IconStore;

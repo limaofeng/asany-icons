@@ -1,12 +1,7 @@
 import classnames from 'classnames';
-import React, { ComponentType, CSSProperties } from 'react';
+import React, { CSSProperties } from 'react';
 
 import { useIcon } from './hook/useIcon';
-
-interface SortType {
-  id: string;
-  name: string;
-}
 
 export interface IconProps {
   name: string;
@@ -31,9 +26,5 @@ function Icon(props: IconProps) {
     />
   );
 }
-
-Icon.register = (key: string, icon: ComponentType<any>, _?: SortType) => {
-  console.warn('key:', key, 'icon:', icon);
-};
 
 export default Icon;

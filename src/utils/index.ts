@@ -166,12 +166,9 @@ export const parseFiles = async (file: File) => {
   }
 };
 
-/*   return (
-    <div>
-      <input type="file" onChange={handleFile} />
-      <div
-        style={{ width: '100%', overflow: 'auto', padding: '10px' }}
-        dangerouslySetInnerHTML={{ __html: state.join('') }}
-      />
-    </div>
-  ); */
+export const sleep = (time: number) =>
+  new Promise(resolve => {
+    setTimeout(() => {
+      resolve(0);
+    }, time);
+  });

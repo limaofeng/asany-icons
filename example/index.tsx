@@ -7,6 +7,7 @@ import * as ReactDOM from 'react-dom';
 import { Icon, IconProvider, useStore } from '../src';
 
 import IconDisplay from './IconDisplay';
+import { useEffect } from 'react';
 
 const client = new ApolloClient({
   uri: 'http://api.asany.cn/graphql',
@@ -20,6 +21,10 @@ const App = () => {
     const files = e.target.files;
     store.import('302', files[0]);
   };
+
+  useEffect(() => {
+    store.addIcons([{ name: 'test', svg: '123' }]);
+  }, []);
 
   return (
     <div>
