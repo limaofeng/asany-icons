@@ -1,5 +1,5 @@
 name: Deploy Example
-on: 
+on:
   push:
     paths: ["example/**", "src/**"]
 jobs:
@@ -23,8 +23,8 @@ jobs:
           working-directory: example
 
       - name: Install and Build 🔧
-        run: | 
-          cd example && yarn build
+        run: yarn build
+        working-directory: example
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@3.6.2
