@@ -14,13 +14,12 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - name: Install deps and build (with cache)
-        uses: bahmutov/npm-install@v1
-
       - name: Install deps and build example (with cache)
         uses: bahmutov/npm-install@v1
         with:
-          working-directory: example
+          working-directory: |
+            ./
+            example
 
       - name: Install and Build 🔧
         run: yarn build
