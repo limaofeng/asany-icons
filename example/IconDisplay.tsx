@@ -13,7 +13,7 @@ function IconDisplay() {
   const loadLibraries = useCallback(async () => {
     console.time('load libraries');
     const libraries = await store.libraries();
-    console.log('libraries:', libraries);
+    console.log('libraries', libraries);
     setLibraries(libraries);
     console.timeEnd('load libraries');
   }, []);
