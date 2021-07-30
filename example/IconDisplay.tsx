@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useCallback } from 'react';
 import { useEffect, useState } from 'react';
+
 import { Icon, useStore } from '../src';
 import { IconLibrary } from '../src/store/IconDatabase';
 
