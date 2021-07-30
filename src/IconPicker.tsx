@@ -2,8 +2,6 @@ import React, { useCallback, useState } from 'react';
 
 import Dialog from './components/Dialog';
 
-import './index.less';
-
 export interface IconPickerProps {
   value: string;
   onChange: (value?: string) => void;

@@ -5,12 +5,11 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import { Icon, IconProvider, useStore } from '../src';
-import { useEffect } from 'react';
 
 import IconDisplay from './IconDisplay';
 
 const client = new ApolloClient({
-  uri: 'http://localhost:8080/graphql',
+  uri: 'http://api.asany.cn/graphql',
   cache: new InMemoryCache(),
 });
 
