@@ -13,7 +13,6 @@ export interface IconProps {
   onClick?: (e: React.MouseEvent) => void;
   className?: string;
   style?: CSSProperties;
-  type?: string;
 }
 
 function Icon(props: IconProps) {
