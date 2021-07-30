@@ -24,9 +24,7 @@ jobs:
 
       - name: Install and Build 🔧
         run: | 
-          yarn build
-        with:
-          working-directory: example
+          cd example && yarn build
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@3.6.2
