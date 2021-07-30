@@ -16,9 +16,10 @@ jobs:
 
       - name: Install deps
         run: yarn
-        working-directory: |
-          ./
-          example
+
+      - name: Install deps (example)
+        run: yarn
+        working-directory: example
 
       - name: Build 🔧
         run: yarn build
