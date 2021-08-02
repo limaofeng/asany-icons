@@ -1,3 +1,12 @@
+## [0.1.5](https://github.com/limaofeng/asany-icons/compare/v0.1.4...v0.1.5) (2021-08-02)
+
+
+### Bug Fixes
+
+* 重复延时获取，不能使用事务，否则会出错 ([205d964](https://github.com/limaofeng/asany-icons/commit/205d964fa8f7c0ea95d3bb74252e309e06464231))
+
+
+
 ## [0.1.4](https://github.com/limaofeng/asany-icons/compare/v0.1.3...v0.1.4) (2021-08-02)
 
 
