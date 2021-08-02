@@ -20,14 +20,7 @@ function IconPicker(props: IconPickerProps) {
     setVisible(false);
   }, []);
 
-  return (
-    <Dialog
-      visible={visible}
-      value={''}
-      onChange={handleChange}
-      close={handleClose}
-    />
-  );
+  return <Dialog visible={visible} value={''} onChange={handleChange} close={handleClose} />;
 }
 
 export default IconPicker;

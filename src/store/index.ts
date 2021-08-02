@@ -1,10 +1,5 @@
 import { ApolloClient, gql } from '@apollo/client';
-import IconDatabase, {
-  CheckPoint,
-  Icon,
-  IconLibrary,
-  IconTag,
-} from './IconDatabase';
+import IconDatabase, { CheckPoint, Icon, IconLibrary, IconTag } from './IconDatabase';
 import moment from 'moment';
 import { xorWith } from 'lodash-es';
 import { EventEmitter } from 'events';
@@ -101,9 +96,7 @@ async function deltaKeys(logs: any[], table: Dexie.Table) {
     console.log('删除:', table.name, id);
     await table.delete(id);
     if (table.name == db.libraries.name) {
-      await db.tags.bulkDelete(
-        (await db.tags.where({ library: id }).toArray()).map(item => item.id!)
-      );
+      await db.tags.bulkDelete((await db.tags.where({ library: id }).toArray()).map(item => item.id!));
     }
   }
   if (table.name == db.icons.name) {
@@ -115,8 +108,7 @@ async function deltaKeys(logs: any[], table: Dexie.Table) {
   const updateIds = logs
     .filter(
       (item: any) =>
-        (item.operation === 'UPDATE' || item.operation == 'INSERT') &&
-        !removeIds.some(id => id === item.id)
+        (item.operation === 'UPDATE' || item.operation == 'INSERT') && !removeIds.some(id => id === item.id)
     )
     .map((item: any) => item.primarykeyValue);
   return updateIds;
@@ -140,10 +132,7 @@ async function deltaUpdates(items: any[], table: Dexie.Table) {
         console.log('新增:', table.name, item);
         table.add({ ...item });
       } else {
-        original.tags.forEach(
-          lost.get(item.library)!.add,
-          lost.get(item.library)
-        );
+        original.tags.forEach(lost.get(item.library)!.add, lost.get(item.library));
         console.log('更新', table.name, item);
         table.update(item.id, { ...item });
       }
@@ -154,11 +143,7 @@ async function deltaUpdates(items: any[], table: Dexie.Table) {
     }
     if (table.name == db.icons.name) {
       for (const [key, value] of tags) {
-        const lostTags = xorWith(
-          Array.from(value),
-          Array.from(lost.get(key)!),
-          Array.from(value)
-        );
+        const lostTags = xorWith(Array.from(value), Array.from(lost.get(key)!), Array.from(value));
         parseTag(Array.from(value), key, lostTags);
       }
     }
@@ -198,11 +183,7 @@ const saveLibrary = async ({ icons, __typename, ...lib }: any) => {
   await parseTag(Array.from(tags), lib.id);
 };
 
-const parseTag = async (
-  tags: string[],
-  library: string,
-  lost: string[] = []
-) => {
+const parseTag = async (tags: string[], library: string, lost: string[] = []) => {
   // 重新计算标签
   const _tags = new Set<string>();
   for (const tag of tags) {
@@ -218,23 +199,13 @@ const parseTag = async (
     // 统计数量
     const count = await db.icons
       .where({ library })
-      .and(item =>
-        item.tags.some(_t => _t.startsWith(path + '/') || _t === path)
-      )
+      .and(item => item.tags.some(_t => _t.startsWith(path + '/') || _t === path))
       .count();
     const exist = await db.tags.where({ path, library }).first();
     // 已存在
     if (exist) {
       await db.tags.update(exist.id!, { ...exist, count });
-      console.log(
-        '更新',
-        db.tags.name,
-        exist.path,
-        'count: ',
-        exist.count,
-        '=>',
-        count
-      );
+      console.log('更新', db.tags.name, exist.path, 'count: ', exist.count, '=>', count);
       continue;
     }
     // 不存在
@@ -259,11 +230,7 @@ const parseTag = async (
       _lostTags.add(path);
     }
   }
-  const diff = xorWith(
-    Array.from(_tags),
-    Array.from(_lostTags),
-    Array.from(_tags)
-  );
+  const diff = xorWith(Array.from(_tags), Array.from(_lostTags), Array.from(_tags));
   for (const path of diff) {
     const exist = await db.tags.where({ path, library }).first();
     if (!exist) {
@@ -272,9 +239,7 @@ const parseTag = async (
     // 统计数量
     const count = await db.icons
       .where({ library })
-      .and(item =>
-        item.tags.some(_t => _t.startsWith(path + '/') || _t === path)
-      )
+      .and(item => item.tags.some(_t => _t.startsWith(path + '/') || _t === path))
       .count();
     if (!count) {
       await db.tags.delete(exist.id!);
@@ -282,15 +247,7 @@ const parseTag = async (
       continue;
     }
     await db.tags.update(exist.id!, { ...exist, count });
-    console.log(
-      '更新',
-      db.tags.name,
-      exist.path,
-      'count: ',
-      exist.count,
-      '=>',
-      count
-    );
+    console.log('更新', db.tags.name, exist.path, 'count: ', exist.count, '=>', count);
   }
 };
 
@@ -348,9 +305,7 @@ class IconStore {
       },
     });
 
-    const liblogs = data.oplogs.filter(
-      (item: any) => item.entityName == 'IconLibrary'
-    );
+    const liblogs = data.oplogs.filter((item: any) => item.entityName == 'IconLibrary');
 
     const libIds = await deltaKeys(liblogs, db.libraries);
 
@@ -367,9 +322,7 @@ class IconStore {
       await deltaUpdates(libraries, db.libraries);
     }
 
-    const iconlogs = data.oplogs.filter(
-      (item: any) => item.entityName == 'Icon'
-    );
+    const iconlogs = data.oplogs.filter((item: any) => item.entityName == 'Icon');
 
     const iconIds = await deltaKeys(iconlogs, db.icons);
 
@@ -389,35 +342,24 @@ class IconStore {
     await updatePoint(now, pointIcon, libraryIcon);
   }
   async libraries(...ids: string[]): Promise<IconLibrary[]> {
-    return await db.transaction(
-      'readonly',
-      db.libraries,
-      db.icons,
-      db.tags,
-      async () => {
-        const libs = (
-          await (ids.length
-            ? db.libraries.where('id').anyOf(ids)
-            : db.libraries
-          ).toArray()
-        ).map(item => ({ ...item }));
+    return await db.transaction('readonly', db.libraries, db.icons, db.tags, async () => {
+      const libs = (await (ids.length ? db.libraries.where('id').anyOf(ids) : db.libraries).toArray()).map(item => ({
+        ...item,
+      }));
 
-        for (const lib of libs) {
-          lib.tags = await this.tags(lib.id!);
-          lib.icons = await this.icons(lib.id!);
-        }
-
-        return libs;
+      for (const lib of libs) {
+        lib.tags = await this.tags(lib.id!);
+        lib.icons = await this.icons(lib.id!);
       }
-    );
+
+      return libs;
+    });
   }
   async icons(library: string, tag?: string): Promise<Icon[]> {
     return await db.transaction('readonly', db.icons, async () => {
       let where = db.icons.where({ library });
       if (tag) {
-        where = where.and(item =>
-          item.tags.some(_t => _t.startsWith(tag + '/') || _t === tag)
-        );
+        where = where.and(item => item.tags.some(_t => _t.startsWith(tag + '/') || _t === tag));
       }
       return await where.toArray();
     });
@@ -436,9 +378,7 @@ class IconStore {
     return () => events.off('icons:' + eventName, callback);
   }
   get(name: string): Promise<Icon | undefined> {
-    const [library, icon] = name.includes('/')
-      ? name.split('/')
-      : [LOCAL_LIBRARY.name, name];
+    const [library, icon] = name.includes('/') ? name.split('/') : [LOCAL_LIBRARY.name, name];
     return db.transaction('readonly', db.libraries, db.icons, async () => {
       const lib = await db.libraries.where({ name: library }).first();
       if (!lib) {
@@ -462,10 +402,7 @@ class IconStore {
     });
     await deltaUpdates(data.icons, db.icons);
   }
-  async addIcons(
-    icons: IconCreateObject[],
-    library: string = LOCAL_LIBRARY.id
-  ) {
+  async addIcons(icons: IconCreateObject[], library: string = LOCAL_LIBRARY.id) {
     let retry = 0,
       lib = await db.libraries.get(library);
     if (!lib && retry < 5) {
@@ -490,18 +427,12 @@ class IconStore {
     );
   }
   async local() {
-    return await db.transaction(
-      'readonly',
-      db.libraries,
-      db.icons,
-      db.tags,
-      async () => {
-        const lib = await db.libraries.get(LOCAL_LIBRARY.id);
-        lib!.tags = await this.tags(LOCAL_LIBRARY.id);
-        lib!.icons = await this.icons(LOCAL_LIBRARY.id);
-        return lib!;
-      }
-    );
+    return await db.transaction('readonly', db.libraries, db.icons, db.tags, async () => {
+      const lib = await db.libraries.get(LOCAL_LIBRARY.id);
+      lib!.tags = await this.tags(LOCAL_LIBRARY.id);
+      lib!.icons = await this.icons(LOCAL_LIBRARY.id);
+      return lib!;
+    });
   }
 }
 

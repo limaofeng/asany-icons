@@ -42,11 +42,7 @@ function Dialog({ value, /*close,*/ visible, onChange }: DialogProps) {
               {mode == 'upload' ? (
                 <UploadPanel />
               ) : (
-                <LibraryPanel
-                  visible={visible}
-                  value={value}
-                  onChange={onChange}
-                />
+                <LibraryPanel visible={visible} value={value} onChange={onChange} />
               )}
             </div>
           </div>

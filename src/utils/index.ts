@@ -70,9 +70,7 @@ const GLYF_ITEM_TPL =
 
 const getGlyfHTML = (glyf: any, ttf: any, opt: any) => {
   let width = '1em';
-  let viewboxWidth = Math.floor(
-    Math.max(glyf.xMax + glyf.xMin / 2, opt.unitsPerEm)
-  );
+  let viewboxWidth = Math.floor(Math.max(glyf.xMax + glyf.xMin / 2, opt.unitsPerEm));
   const viewboxHeight = Math.max(glyf.yMax + glyf.yMin, opt.unitsPerEm);
 
   let g: any = {
@@ -127,16 +125,13 @@ export const parseFiles = async (file: File) => {
     console.log(
       ttf.glyf.filter(
         (glyf: any) =>
-          (glyf.unicode || []).reduce((l: number, r: number) => l + r, 0) <
-            10000 || glyf.contours.length == 0
+          (glyf.unicode || []).reduce((l: number, r: number) => l + r, 0) < 10000 || glyf.contours.length == 0
       )
     );
 
     return ttf.glyf
       .filter(
-        (glyf: any) =>
-          (glyf.unicode || []).reduce((l: number, r: number) => l + r, 0) >
-            10000 && glyf.contours.length
+        (glyf: any) => (glyf.unicode || []).reduce((l: number, r: number) => l + r, 0) > 10000 && glyf.contours.length
       )
       .map(function(glyf: any, i: number) {
         let index = i;

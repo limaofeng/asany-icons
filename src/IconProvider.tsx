@@ -19,14 +19,7 @@ function IconProvider(props: WithApolloClient<IconProviderProps>) {
     store.loadRemote();
   }, []);
 
-  return useMemo(
-    () => (
-      <IconContext.Provider value={store}>
-        {props.children}
-      </IconContext.Provider>
-    ),
-    []
-  );
+  return useMemo(() => <IconContext.Provider value={store}>{props.children}</IconContext.Provider>, []);
 }
 
 export default withApollo(IconProvider as any);
