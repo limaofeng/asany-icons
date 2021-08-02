@@ -9,7 +9,7 @@ import { Icon, IconProvider, store } from '../src';
 import IconDisplay from './IconDisplay';
 
 const client = new ApolloClient({
-  uri: 'http://api.asany.cn/graphql',
+  uri: 'https://api.asany.cn/graphql',
   cache: new InMemoryCache(),
 });
 
