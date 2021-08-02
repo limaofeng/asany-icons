@@ -403,14 +403,7 @@ class IconStore {
     await deltaUpdates(data.icons, db.icons);
   }
   async addIcons(icons: IconCreateObject[], library: string = LOCAL_LIBRARY.id) {
-    let retry = 0,
-      lib = await db.libraries.get(library);
-    if (!lib && retry < 5) {
-      await sleep(250);
-      lib = await db.libraries.get(library);
-      retry++;
-    }
-
+    const lib = await (library == LOCAL_LIBRARY.id ? this.local() : db.libraries.get(library));
     if (!lib) {
       throw `库{${library}}未发现`;
     }
@@ -428,7 +421,16 @@ class IconStore {
   }
   async local() {
     return await db.transaction('readonly', db.libraries, db.icons, db.tags, async () => {
-      const lib = await db.libraries.get(LOCAL_LIBRARY.id);
+      let retry = 0,
+        lib = await db.libraries.get(LOCAL_LIBRARY.id);
+      if (!lib && retry < 5) {
+        await sleep(250);
+        lib = await db.libraries.get(LOCAL_LIBRARY.id);
+        retry++;
+      }
+      if (!lib) {
+        return;
+      }
       lib!.tags = await this.tags(LOCAL_LIBRARY.id);
       lib!.icons = await this.icons(LOCAL_LIBRARY.id);
       return lib!;
