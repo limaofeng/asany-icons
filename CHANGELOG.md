@@ -1,3 +1,17 @@
+## [0.1.4](https://github.com/limaofeng/asany-icons/compare/v0.1.3...v0.1.4) (2021-08-02)
+
+
+### Bug Fixes
+
+* 延时获取本地库, 最多 5 * 250ms ([b92087a](https://github.com/limaofeng/asany-icons/commit/b92087ac99e099911d3d391c6bbd1e295feaf171))
+
+
+### Features
+
+* 默认导出 IconLibrary 与 IconTag 的类型 ([20fc49b](https://github.com/limaofeng/asany-icons/commit/20fc49b63cc58772e89789ac65b7bee274300de5))
+
+
+
 ## [0.1.3](https://github.com/limaofeng/asany-icons/compare/v0.1.2...v0.1.3) (2021-07-30)
 
 
