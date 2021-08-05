@@ -97,6 +97,7 @@ async function deltaKeys(logs: any[], table: Dexie.Table) {
     await table.delete(id);
     if (table.name == db.libraries.name) {
       await db.tags.bulkDelete((await db.tags.where({ library: id }).toArray()).map(item => item.id!));
+      await db.icons.bulkDelete((await db.icons.where({ library: id }).toArray()).map(item => item.id!));
     }
   }
   if (table.name == db.icons.name) {

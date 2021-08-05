@@ -102,7 +102,6 @@ const getGlyfHTML = (glyf: any, ttf: any, opt: any) => {
 };
 
 export const parseFiles = async (file: File) => {
-  console.log(file.name);
   const type = (/\.([^\.]+)$/.exec(file.name) || [])[1];
   const options = {
     type,
@@ -121,15 +120,16 @@ export const parseFiles = async (file: File) => {
     console.log('glyfTotal', glyfTotal);
     let unitsPerEm = ttf.head.unitsPerEm;
     let descent = ttf.hhea.descent;
-
-    console.log(
-      ttf.glyf.filter(
-        (glyf: any) =>
-          (glyf.unicode || []).reduce((l: number, r: number) => l + r, 0) < 10000 || glyf.contours.length == 0
-      )
-    );
-
-    return ttf.glyf
+    // console.log(
+    //   'contours is null',
+    //   ttf.glyf.filter((glyf: any) => !glyf.contours)
+    // );
+    // console.log(
+    //   'unicode < 10000',
+    //   ttf.glyf.filter((glyf: any) => (glyf.unicode || []).reduce((l: number, r: number) => l + r, 0) < 10000)
+    // );
+    const icons = ttf.glyf
+      .filter((glyf: any) => !!glyf.contours)
       .filter(
         (glyf: any) => (glyf.unicode || []).reduce((l: number, r: number) => l + r, 0) > 10000 && glyf.contours.length
       )
@@ -155,6 +155,8 @@ export const parseFiles = async (file: File) => {
           name: glyf.name,
         };
       });
+    console.log('解析', file.name, '发现', icons.length, '个图标');
+    return icons;
   } catch (exp) {
     console.error(exp.message);
     throw exp;

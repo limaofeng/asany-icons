@@ -19,7 +19,7 @@ function Icon(props: IconProps) {
       role="img"
       aria-label={name}
       style={style}
-      className={classnames(className, `anticon ${name}`)}
+      className={classnames(className, `anyicon ${name}`)}
       dangerouslySetInnerHTML={{
         __html: svg!,
       }}

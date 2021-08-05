@@ -16,10 +16,6 @@ const client = new ApolloClient({
 store.addIcons([{ name: 'test', svg: '123' }]);
 
 const App = () => {
-  const handleFile = e => {
-    const files = e.target.files;
-    store.import('302', files[0]);
-  };
 
   return (
     <div>
@@ -29,8 +25,6 @@ const App = () => {
           <Icon name="nifty/us-la" />
           <br />
           <div style={{ marginTop: 50 }}>
-            <h3>图标解析：</h3>
-            <input type="file" onChange={handleFile} />
             <IconDisplay />
           </div>
         </IconProvider>

@@ -23,13 +23,19 @@ function IconDisplay() {
     return store.onChange(loadLibraries);
   }, []);
 
+  const handleFile = (lib: IconLibrary) => e => {
+    const files = e.target.files;
+    store.import(lib.id!, files[0]);
+  };
+
   return (
     <div>
       {libraries.map(lib => (
         <div key={lib.id}>
           <div>
-            <h1 style={{ display: 'inline-block' }}>{lib.name}</h1>
-            <span>{lib.description}</span>
+            <h1 style={{ display: 'inline-block', marginRight: 16 }}>{lib.name}</h1>
+            <span style={{ marginRight: 16 }}>{lib.description}</span>
+            {lib.name !== 'local' && <input type="file" onChange={handleFile(lib)} />}
           </div>
           <hr />
           <div>
@@ -42,11 +48,7 @@ function IconDisplay() {
                   {lib.icons
                     .filter(icon => icon.tags.includes(tag.path))
                     .map(icon => (
-                      <Icon
-                        key={icon.id}
-                        style={{ padding: 10 }}
-                        name={`${lib.name}/${icon.name}`}
-                      />
+                      <Icon key={icon.id} style={{ padding: 10 }} name={`${lib.name}/${icon.name}`} />
                     ))}
                 </div>
               </div>
@@ -60,11 +62,7 @@ function IconDisplay() {
                   {lib.icons
                     .filter(icon => !icon.tags.length)
                     .map(icon => (
-                      <Icon
-                        key={icon.id}
-                        style={{ padding: 10 }}
-                        name={`${lib.name}/${icon.name || icon.unicode}`}
-                      />
+                      <Icon key={icon.id} style={{ padding: 10 }} name={`${lib.name}/${icon.name || icon.unicode}`} />
                     ))}
                 </div>
               </div>
