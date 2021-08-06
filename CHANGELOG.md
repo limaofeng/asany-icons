@@ -1,3 +1,12 @@
+## [0.1.7](https://github.com/limaofeng/asany-icons/compare/v0.1.6...v0.1.7) (2021-08-06)
+
+
+### Bug Fixes
+
+* 避免出现 Uncaught (in promise) ([2b0a6d6](https://github.com/limaofeng/asany-icons/commit/2b0a6d6b692e6bd64eceee81d092ec54d51f4719))
+
+
+
 ## [0.1.6](https://github.com/limaofeng/asany-icons/compare/v0.1.5...v0.1.6) (2021-08-06)
 
 
