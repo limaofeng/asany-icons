@@ -1,3 +1,17 @@
+## [0.1.6](https://github.com/limaofeng/asany-icons/compare/v0.1.5...v0.1.6) (2021-08-06)
+
+
+### Bug Fixes
+
+* 解决组件销毁后，依然执行 set state 的问题 ([9239460](https://github.com/limaofeng/asany-icons/commit/92394608a79a6eb9d8f1e13486b57f7ff0142f8d))
+
+
+### Features
+
+* 图标导入优化 ([98df2ea](https://github.com/limaofeng/asany-icons/commit/98df2ea15423293658229131c904de527ac81834))
+
+
+
 ## [0.1.5](https://github.com/limaofeng/asany-icons/compare/v0.1.4...v0.1.5) (2021-08-02)
 
 
