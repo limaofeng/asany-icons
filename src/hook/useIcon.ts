@@ -12,15 +12,15 @@ export const useIcon = (name: string): string | undefined => {
     const cancel = new Promise<Icon | undefined>((_, reject) => {
       _reject = reject;
     });
-    Promise.race([delay, cancel]).then(icon => {
-      setIcon(icon);
-    });
+    Promise.race([delay, cancel])
+      .then(setIcon)
+      .catch(error => console.info(error));
     const unsubscribe = store.on(name, icon => {
       setIcon(icon);
     });
     return () => {
       unsubscribe();
-      _reject && _reject();
+      _reject && _reject(`卸载图标:${name}`);
     };
   }, []);
 
