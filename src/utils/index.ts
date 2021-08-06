@@ -64,26 +64,25 @@ function loadTTFFile(file: any, option: any) {
 }
 
 const GLYF_ITEM_TPL =
-  '<svg width="${width}" height="1em" viewbox="0 0 ${viewboxWidth} ${viewboxHeight}" fill="currentColor">' +
-  '<g transform="scale(1, -1) translate(${translateX}, -${translateY})"><path fill-opacity=".8" ${d}/></g>' +
+  '<svg width="1em" height="1em" viewbox="0 0 ${viewboxWidth} ${viewboxHeight}" fill="currentColor">' +
+  '<g transform="scale(${scale}, -${scale}) translate(${translateX}, -${translateY})"><path fill-opacity=".8" ${d}/></g>' +
   '</svg>';
 
 const getGlyfHTML = (glyf: any, ttf: any, opt: any) => {
-  let width = '1em';
-  let viewboxWidth = Math.floor(Math.max(glyf.xMax + glyf.xMin / 2, opt.unitsPerEm));
+  let viewboxWidth = Math.floor(glyf.xMax + glyf.xMin / 2); // Math.floor(Math.max(glyf.xMax + glyf.xMin / 2, opt.unitsPerEm));
   const viewboxHeight = Math.max(glyf.yMax + glyf.yMin, opt.unitsPerEm);
-
+  const ratio = 1024 / opt.unitsPerEm;
   let g: any = {
     index: opt.index,
     compound: glyf.compound ? 'compound' : '',
     selected: opt.selected ? 'selected' : '',
     editing: opt.editing ? 'editing' : '',
     modify: glyf.modify,
-    width,
-    viewboxWidth,
-    viewboxHeight,
+    scale: ratio,
+    viewboxWidth: viewboxWidth * ratio,
+    viewboxHeight: viewboxHeight * ratio,
     unitsPerEm: opt.unitsPerEm,
-    translateX: 0, //(1024 - width) / 2,
+    translateX: 0, // Math.floor((viewboxWidth - (glyf.xMax + glyf.xMin / 2)) / 2),
     translateY: viewboxHeight + opt.descent,
     unicode: (glyf.unicode || [])
       .map(function(u: any) {
@@ -96,6 +95,10 @@ const getGlyfHTML = (glyf: any, ttf: any, opt: any) => {
   let d = '';
   if ((d = glyf2svg(glyf, ttf))) {
     g.d = 'd="' + d + '"';
+  }
+
+  if (g.name === 'uniF101') {
+    console.log('ITEM: ', viewboxWidth, glyf, opt);
   }
 
   return string.format(GLYF_ITEM_TPL, g);
@@ -118,16 +121,10 @@ export const parseFiles = async (file: File) => {
   try {
     let glyfTotal = ttf.glyf.length;
     console.log('glyfTotal', glyfTotal);
+    console.log('ttf.hhea', ttf.hhea);
+
     let unitsPerEm = ttf.head.unitsPerEm;
     let descent = ttf.hhea.descent;
-    // console.log(
-    //   'contours is null',
-    //   ttf.glyf.filter((glyf: any) => !glyf.contours)
-    // );
-    // console.log(
-    //   'unicode < 10000',
-    //   ttf.glyf.filter((glyf: any) => (glyf.unicode || []).reduce((l: number, r: number) => l + r, 0) < 10000)
-    // );
     const icons = ttf.glyf
       .filter((glyf: any) => !!glyf.contours)
       .filter(

@@ -385,11 +385,8 @@ class IconStore {
       if (!lib) {
         return undefined;
       }
-      return db.icons
-        .where({ library: lib!.id!, name: icon })
-        .or('unicode')
-        .equals(icon)
-        .first();
+      const iconByName = await db.icons.where({ library: lib!.id!, name: icon }).first();
+      return iconByName || db.icons.where({ library: lib!.id!, unicode: icon }).first();
     });
   }
   async import(library: string, file: File) {

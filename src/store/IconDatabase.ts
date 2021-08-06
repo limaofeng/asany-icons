@@ -44,7 +44,7 @@ class IconDatabase extends Dexie {
     super('IconDatabase');
     this.version(1).stores({
       tags: '++id,path,name,library,parentPath,[path+library]',
-      icons: '++id,name,library,unicode,tags,[library+name]',
+      icons: '++id,name,library,unicode,tags,[library+name],[library+unicode]',
       libraries: '++id,name',
       checkpoints: 'id,name,time',
     });
