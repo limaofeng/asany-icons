@@ -7,12 +7,21 @@ export const useIcon = (name: string): string | undefined => {
   const [icon, setIcon] = useState<Icon | undefined>(undefined);
 
   useEffect(() => {
-    store.get(name).then(icon => {
+    const delay = store.get(name);
+    let _reject: { (): any; (reason?: any): void };
+    const cancel = new Promise<Icon | undefined>((_, reject) => {
+      _reject = reject;
+    });
+    Promise.race([delay, cancel]).then(icon => {
       setIcon(icon);
     });
-    return store.on(name, icon => {
+    const unsubscribe = store.on(name, icon => {
       setIcon(icon);
     });
+    return () => {
+      unsubscribe();
+      _reject && _reject();
+    };
   }, []);
 
   return icon?.content;
