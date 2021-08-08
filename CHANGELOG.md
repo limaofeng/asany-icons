@@ -1,3 +1,12 @@
+## [0.1.8](https://github.com/limaofeng/asany-icons/compare/v0.1.7...v0.1.8) (2021-08-08)
+
+
+### Bug Fixes
+
+* 解决 svg 居中问题 ([d3fe101](https://github.com/limaofeng/asany-icons/commit/d3fe1014444c741c04124581b87cf0df1a07d9b7))
+
+
+
 ## [0.1.7](https://github.com/limaofeng/asany-icons/compare/v0.1.6...v0.1.7) (2021-08-06)
 
 
