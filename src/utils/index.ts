@@ -3,28 +3,32 @@ import glyf2svg from 'fonteditor-core/lib/ttf/util/glyf2svg';
 import string from 'fonteditor-core/lib/common/string';
 
 function svg2ttf(buffer: any) {
-  let options: any = { combinePath: false }; //program.setting.get('ie').import;
-  options.type = 'svg';
+  const options: any = { combinePath: true, type: 'svg' };
   return font.create(buffer, options).data;
 }
 
-function loadSVGFile(file: any, _: any) {
+function loadSVGFile(file: any, options: IconParseOptions) {
   let fileReader = new FileReader();
-  let fName = file.name.replace(/\.\w+$/, '');
+  let fName = options.filename;
   const retVal = new Promise((resolve, reject) => {
     fileReader.onload = function(e: any) {
+      let buffer = e.target.result;
       try {
-        let buffer = e.target.result;
         let imported = svg2ttf(buffer);
         // 设置单个字形名字
         if (imported.glyf && imported.glyf.length === 1) {
+          if (options.type == 'svg' && options.naturo) {
+            return reject({ data: buffer });
+          }
           imported.glyf[0].name = fName;
         }
         resolve(imported);
-        // options.success && options.success(imported);
       } catch (exp) {
-        alert(exp.message);
-        reject(e);
+        if (options.type == 'svg' && options.naturo) {
+          reject({ err: exp, data: buffer });
+        } else {
+          reject(exp);
+        }
       }
     };
 
@@ -96,8 +100,13 @@ const getGlyfHTML = (glyf: any, ttf: any, opt: any) => {
   if ((d = glyf2svg(glyf, ttf))) {
     g.d = 'd="' + d + '"';
   }
-
   return string.format(GLYF_ITEM_TPL, g);
+};
+
+type IconParseOptions = {
+  type?: 'svg' | 'ttf';
+  naturo: boolean;
+  filename?: string;
 };
 
 /**
@@ -105,28 +114,21 @@ const getGlyfHTML = (glyf: any, ttf: any, opt: any) => {
  * @param file
  * @returns
  */
-export const parseIconFile = async (file: File) => {
+export const parseIconFile = async (file: File, options: IconParseOptions = { naturo: false }) => {
   const type = (/\.([^\.]+)$/.exec(file.name) || [])[1];
-  const options = {
-    type,
-  };
-
+  let fName = file.name.replace(/\.\w+$/, '');
+  options.type = type as any;
+  options.filename = fName;
   let ttf: any;
-
-  if ('svg' === type) {
-    ttf = await loadSVGFile(file, options);
-  } else {
-    ttf = await loadTTFFile(file, options);
-  }
-
   try {
-    let glyfTotal = ttf.glyf.length;
-    console.log('glyfTotal', glyfTotal);
-    console.log('ttf.hhea', ttf.hhea);
-
+    if ('svg' === type) {
+      options.naturo = true;
+      ttf = await loadSVGFile(file, options);
+    } else {
+      ttf = await loadTTFFile(file, options);
+    }
     let unitsPerEm = ttf.head.unitsPerEm;
     let descent = ttf.hhea.descent;
-    // (glyf.unicode || []).reduce((l: number, r: number) => l + r, 0) > 10000 &&
     const icons = ttf.glyf
       .filter((glyf: any) => !!glyf.contours)
       .filter((glyf: any) => glyf.contours.length)
@@ -154,9 +156,20 @@ export const parseIconFile = async (file: File) => {
       });
     console.log('解析', file.name, '发现', icons.length, '个图标');
     return icons;
-  } catch (exp) {
-    console.error(exp.message);
-    throw exp;
+  } catch (error) {
+    if (error.data) {
+      console.log(error.err);
+      return [
+        {
+          content: error.data.replace(/<svg[^>]*>/gi, (data: string) =>
+            data.replace(/(width|height)="((.*?))"/gi, '$1="1em"')
+          ),
+          name: fName,
+          tags: [],
+        },
+      ];
+    }
+    throw error;
   }
 };
 

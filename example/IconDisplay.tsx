@@ -35,7 +35,7 @@ function IconDisplay() {
           <div>
             <h1 style={{ display: 'inline-block', marginRight: 16 }}>{lib.name}</h1>
             <span style={{ marginRight: 16 }}>{lib.description}</span>
-            {lib.name !== 'local' && <input type="file" onChange={handleFile(lib)} />}
+            {lib.name !== 'local' && <input multiple type="file" onChange={handleFile(lib)} />}
           </div>
           <hr />
           <div>
