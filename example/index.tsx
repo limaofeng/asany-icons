@@ -6,7 +6,7 @@ import { useState } from 'react';
 import * as ReactDOM from 'react-dom';
 
 import { Icon, IconProvider, store } from '../src';
-import { parseFiles } from '../src/utils';
+import { parseIconFile } from '../src/utils';
 import IconDisplay from './IconDisplay';
 
 const client = new ApolloClient({
@@ -19,7 +19,7 @@ store.addIcons([{ name: 'test', svg: '123' }]);
 const App = () => {
   const [svgs, setSvgs] = useState<string[]>([]);
   const handleFile = async e => {
-    const icons = await parseFiles(e.target.files[0]);
+    const icons = await parseIconFile(e.target.files[0]);
     setSvgs(icons.map(({ content }) => content));
   };
   return (

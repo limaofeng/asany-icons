@@ -3,7 +3,7 @@ import IconDatabase, { CheckPoint, Icon, IconLibrary, IconTag } from './IconData
 import moment from 'moment';
 import { xorWith } from 'lodash-es';
 import { EventEmitter } from 'events';
-import { parseFiles, sleep } from '../utils';
+import { parseIconFile, sleep } from '../utils';
 
 const db = new IconDatabase();
 const events = new EventEmitter();
@@ -390,7 +390,7 @@ class IconStore {
     });
   }
   async import(library: string, file: File) {
-    const icons = await parseFiles(file);
+    const icons = await parseIconFile(file);
     const { data } = await this._client!.mutate({
       mutation: IMPORT_ICONS,
       variables: {

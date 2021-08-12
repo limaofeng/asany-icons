@@ -83,7 +83,7 @@ const getGlyfHTML = (glyf: any, ttf: any, opt: any) => {
     viewboxHeight: viewboxHeight * ratio,
     unitsPerEm: opt.unitsPerEm,
     translateX: 0, // Math.floor((viewboxWidth - (glyf.xMax + glyf.xMin / 2)) / 2),
-    translateY: viewboxHeight + opt.descent,
+    translateY: viewboxHeight + (opt.descent || 0),
     unicode: (glyf.unicode || [])
       .map(function(u: any) {
         return '$' + u.toString(16).toUpperCase();
@@ -97,14 +97,15 @@ const getGlyfHTML = (glyf: any, ttf: any, opt: any) => {
     g.d = 'd="' + d + '"';
   }
 
-  if (g.name === 'uniF101') {
-    console.log('ITEM: ', viewboxWidth, glyf, opt);
-  }
-
   return string.format(GLYF_ITEM_TPL, g);
 };
 
-export const parseFiles = async (file: File) => {
+/**
+ * 支持 svg / ttf / woff 文件
+ * @param file
+ * @returns
+ */
+export const parseIconFile = async (file: File) => {
   const type = (/\.([^\.]+)$/.exec(file.name) || [])[1];
   const options = {
     type,
@@ -125,11 +126,10 @@ export const parseFiles = async (file: File) => {
 
     let unitsPerEm = ttf.head.unitsPerEm;
     let descent = ttf.hhea.descent;
+    // (glyf.unicode || []).reduce((l: number, r: number) => l + r, 0) > 10000 &&
     const icons = ttf.glyf
       .filter((glyf: any) => !!glyf.contours)
-      .filter(
-        (glyf: any) => (glyf.unicode || []).reduce((l: number, r: number) => l + r, 0) > 10000 && glyf.contours.length
-      )
+      .filter((glyf: any) => glyf.contours.length)
       .map(function(glyf: any, i: number) {
         let index = i;
         const glyfStr = getGlyfHTML(glyf, ttf, {

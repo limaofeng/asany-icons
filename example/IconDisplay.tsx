@@ -47,6 +47,7 @@ function IconDisplay() {
                 <div>
                   {lib.icons
                     .filter(icon => icon.tags.includes(tag.path))
+                    .slice(0, 100)
                     .map(icon => (
                       <Icon key={icon.id} style={{ padding: 10 }} name={`${lib.name}/${icon.name}`} />
                     ))}
@@ -61,6 +62,7 @@ function IconDisplay() {
                 <div>
                   {lib.icons
                     .filter(icon => !icon.tags.length)
+                    .slice(0, 100)
                     .map(icon => (
                       <Icon key={icon.id} style={{ padding: 10 }} name={`${lib.name}/${icon.name || icon.unicode}`} />
                     ))}
