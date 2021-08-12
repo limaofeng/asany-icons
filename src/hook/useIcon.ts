@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
-import { Icon } from '../store/IconDatabase';
+import { IconDefinition } from '../store/IconDatabase';
 import { useStore } from './useStore';
 
 export const useIcon = (name: string): string | undefined => {
   const store = useStore();
-  const [icon, setIcon] = useState<Icon | undefined>(undefined);
+  const [icon, setIcon] = useState<IconDefinition | undefined>(undefined);
 
   useEffect(() => {
     const delay = store.get(name);
     let _reject: { (): any; (reason?: any): void };
-    const cancel = new Promise<Icon | undefined>((_, reject) => {
+    const cancel = new Promise<IconDefinition | undefined>((_, reject) => {
       _reject = reject;
     });
     Promise.race([delay, cancel])

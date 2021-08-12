@@ -1,5 +1,5 @@
 import { ApolloClient, gql } from '@apollo/client';
-import IconDatabase, { CheckPoint, Icon, IconLibrary, IconTag } from './IconDatabase';
+import IconDatabase, { CheckPoint, IconDefinition, IconLibraryDefinition, IconTagDefinition } from './IconDatabase';
 import moment from 'moment';
 import { xorWith } from 'lodash-es';
 import { EventEmitter } from 'events';
@@ -342,7 +342,7 @@ class IconStore {
 
     await updatePoint(now, pointIcon, libraryIcon);
   }
-  async libraries(...ids: string[]): Promise<IconLibrary[]> {
+  async libraries(...ids: string[]): Promise<IconLibraryDefinition[]> {
     return await db.transaction('readonly', db.libraries, db.icons, db.tags, async () => {
       const libs = (await (ids.length ? db.libraries.where('id').anyOf(ids) : db.libraries).toArray()).map(item => ({
         ...item,
@@ -356,7 +356,7 @@ class IconStore {
       return libs;
     });
   }
-  async icons(library: string, tag?: string): Promise<Icon[]> {
+  async icons(library: string, tag?: string): Promise<IconDefinition[]> {
     return await db.transaction('readonly', db.icons, async () => {
       let where = db.icons.where({ library });
       if (tag) {
@@ -365,7 +365,7 @@ class IconStore {
       return await where.toArray();
     });
   }
-  async tags(library: string): Promise<IconTag[]> {
+  async tags(library: string): Promise<IconTagDefinition[]> {
     return await db.transaction('readonly', db.tags, db.icons, async () => {
       return db.tags.where({ library }).toArray();
     });
@@ -374,11 +374,11 @@ class IconStore {
     events.on('change', callback);
     return () => events.off('change', callback);
   }
-  on(eventName: string, callback: (icon: Icon) => void): () => void {
+  on(eventName: string, callback: (icon: IconDefinition) => void): () => void {
     events.on('icons:' + eventName, callback);
     return () => events.off('icons:' + eventName, callback);
   }
-  get(name: string): Promise<Icon | undefined> {
+  get(name: string): Promise<IconDefinition | undefined> {
     const [library, icon] = name.includes('/') ? name.split('/') : [LOCAL_LIBRARY.name, name];
     return db.transaction('readonly', db.libraries, db.icons, async () => {
       const lib = await db.libraries.where({ name: library }).first();

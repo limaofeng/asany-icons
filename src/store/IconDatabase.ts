@@ -1,7 +1,7 @@
 import Dexie from 'dexie';
 
-export interface Icon {
-  id?: string;
+export interface IconDefinition {
+  id: string;
   name: string;
   description: string;
   tags: string[];
@@ -10,16 +10,16 @@ export interface Icon {
   library: string;
 }
 
-export interface IconLibrary {
+export interface IconLibraryDefinition {
   id?: string;
   name?: string;
   description?: string;
-  tags: IconTag[];
-  icons: Icon[];
+  tags: IconTagDefinition[];
+  icons: IconDefinition[];
   total?: number;
 }
 
-export interface IconTag {
+export interface IconTagDefinition {
   id?: number;
   path: string;
   name: string;
@@ -35,9 +35,9 @@ export interface CheckPoint {
 }
 
 class IconDatabase extends Dexie {
-  public tags: Dexie.Table<IconTag, number>;
-  public icons: Dexie.Table<Icon, string>;
-  public libraries: Dexie.Table<IconLibrary, string>;
+  public tags: Dexie.Table<IconTagDefinition, number>;
+  public icons: Dexie.Table<IconDefinition, string>;
+  public libraries: Dexie.Table<IconLibraryDefinition, string>;
   public checkpoints: Dexie.Table<CheckPoint, string>;
 
   public constructor() {

@@ -3,12 +3,12 @@ import { useCallback } from 'react';
 import { useEffect, useState } from 'react';
 
 import { Icon, useStore } from '../src';
-import { IconLibrary } from '../src/store/IconDatabase';
+import { IconLibraryDefinition } from '../src/store/IconDatabase';
 
 function IconDisplay() {
   const store = useStore();
 
-  const [libraries, setLibraries] = useState<IconLibrary[]>([]);
+  const [libraries, setLibraries] = useState<IconLibraryDefinition[]>([]);
 
   const loadLibraries = useCallback(async () => {
     console.time('load libraries');
@@ -23,7 +23,7 @@ function IconDisplay() {
     return store.onChange(loadLibraries);
   }, []);
 
-  const handleFile = (lib: IconLibrary) => e => {
+  const handleFile = (lib: IconLibraryDefinition) => e => {
     const files = e.target.files;
     store.import(lib.id!, files[0]);
   };
