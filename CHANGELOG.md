@@ -1,3 +1,12 @@
+## [0.1.10](https://github.com/limaofeng/asany-icons/compare/v0.1.9...v0.1.10) (2021-08-12)
+
+
+### Bug Fixes
+
+* 导入单个图标时，不做 svg2ttf 解析动作。直接返回原信息 ([2f6fde2](https://github.com/limaofeng/asany-icons/commit/2f6fde2b8e77a0d5ea2f9b2c5a712a862b6bdd31))
+
+
+
 ## [0.1.9](https://github.com/limaofeng/asany-icons/compare/v0.1.8...v0.1.9) (2021-08-12)
 
 
