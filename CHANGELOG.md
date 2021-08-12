@@ -1,3 +1,13 @@
+## [0.1.9](https://github.com/limaofeng/asany-icons/compare/v0.1.8...v0.1.9) (2021-08-12)
+
+
+### Bug Fixes
+
+* 修复导出 IconDefinition 的问题 ([f43aaf4](https://github.com/limaofeng/asany-icons/commit/f43aaf417f9680b7e93939c7612f667764455fa2))
+* 修复解析单个 SVG 图标的BUG，同时导出 parseIconFile ([a6f76c3](https://github.com/limaofeng/asany-icons/commit/a6f76c3e23cd861ddbecf083b91c84f599158491))
+
+
+
 ## [0.1.8](https://github.com/limaofeng/asany-icons/compare/v0.1.7...v0.1.8) (2021-08-08)
 
 
