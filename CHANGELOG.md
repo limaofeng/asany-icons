@@ -1,3 +1,12 @@
+## [0.1.11](https://github.com/limaofeng/asany-icons/compare/v0.1.10...v0.1.11) (2021-08-30)
+
+
+### Bug Fixes
+
+*  lodash-es 改为 lodash ([6321ea9](https://github.com/limaofeng/asany-icons/commit/6321ea995359faf892dcb96cd9541a3fbe9de858))
+
+
+
 ## [0.1.10](https://github.com/limaofeng/asany-icons/compare/v0.1.9...v0.1.10) (2021-08-12)
 
 
