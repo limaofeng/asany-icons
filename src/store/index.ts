@@ -1,7 +1,7 @@
 import { ApolloClient, gql } from '@apollo/client';
 import IconDatabase, { CheckPoint, IconDefinition, IconLibraryDefinition, IconTagDefinition } from './IconDatabase';
 import moment from 'moment';
-import { xorWith } from 'lodash-es';
+import xorWith from 'lodash/xorWith';
 import { EventEmitter } from 'events';
 import { parseIconFile, sleep } from '../utils';
 

@@ -45,11 +45,17 @@
   "size-limit": [
     {
       "path": "dist/icons.cjs.production.min.js",
-      "limit": "10 KB"
+      "limit": "500 KB",
+      "ignore": [
+        "fonteditor-core"
+      ]
     },
     {
       "path": "dist/icons.esm.js",
-      "limit": "10 KB"
+      "limit": "200 KB",
+      "ignore": [
+        "fonteditor-core"
+      ]
     }
   ],
   "devDependencies": {
