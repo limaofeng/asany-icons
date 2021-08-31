@@ -72029,7 +72029,7 @@ exports.default = _default;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.QUERY_CHECK_POINT = exports.ALL_ICON_LIBRARIES = void 0;
+exports.default = exports.QUERY_ICONS = exports.QUERY_LIBRARIES = exports.QUERY_CHECK_POINT = exports.ALL_ICON_LIBRARIES = void 0;
 
 var _tslib = require("tslib");
 
@@ -72055,7 +72055,9 @@ exports.ALL_ICON_LIBRARIES = ALL_ICON_LIBRARIES;
 var QUERY_CHECK_POINT = (0, _client.gql)(templateObject_3 || (templateObject_3 = (0, _tslib.__makeTemplateObject)(["\n  query oplogs($filter: OplogFilter) {\n    oplogs(filter: $filter) {\n      id\n      entityName\n      operation\n      primarykeyValue\n    }\n  }\n"], ["\n  query oplogs($filter: OplogFilter) {\n    oplogs(filter: $filter) {\n      id\n      entityName\n      operation\n      primarykeyValue\n    }\n  }\n"])));
 exports.QUERY_CHECK_POINT = QUERY_CHECK_POINT;
 var QUERY_LIBRARIES = (0, _client.gql)(templateObject_4 || (templateObject_4 = (0, _tslib.__makeTemplateObject)(["\n  query libraries($ids: [ID]) {\n    libraries: iconLibraries(filter: { id_in: $ids }) {\n      id\n      name\n      description\n    }\n  }\n"], ["\n  query libraries($ids: [ID]) {\n    libraries: iconLibraries(filter: { id_in: $ids }) {\n      id\n      name\n      description\n    }\n  }\n"])));
+exports.QUERY_LIBRARIES = QUERY_LIBRARIES;
 var QUERY_ICONS = (0, _client.gql)(templateObject_5 || (templateObject_5 = (0, _tslib.__makeTemplateObject)(["\n  query icons($ids: [ID]) {\n    icons(filter: { id_in: $ids }) {\n      id\n      name\n      tags\n      unicode\n      content\n      description\n      library: libraryId\n    }\n  }\n"], ["\n  query icons($ids: [ID]) {\n    icons(filter: { id_in: $ids }) {\n      id\n      name\n      tags\n      unicode\n      content\n      description\n      library: libraryId\n    }\n  }\n"])));
+exports.QUERY_ICONS = QUERY_ICONS;
 
 function deltaKeys(logs, table) {
   return (0, _tslib.__awaiter)(this, void 0, void 0, function () {
@@ -72276,8 +72278,12 @@ function deltaUpdates(items, table) {
                   console.log('新增:', table.name, item);
                   table.add((0, _tslib.__assign)({}, item));
                 } else {
-                  original.tags.forEach(lost.get(item.library).add, lost.get(item.library));
                   console.log('更新', table.name, item);
+
+                  if (table.name === db.icons.name) {
+                    original.tags.forEach(lost.get(item.library).add, lost.get(item.library));
+                  }
+
                   table.update(item.id, (0, _tslib.__assign)({}, item));
                 }
 
@@ -72290,7 +72296,7 @@ function deltaUpdates(items, table) {
 
               case 4:
                 lib = _e.sent();
-                events.emit('icons:' + (lib === null || lib === void 0 ? void 0 : lib.name) + '/' + item.name, item);
+                events.emit('icons:' + lib.name + '/' + item.name, item);
                 _e.label = 5;
 
               case 5:
@@ -74355,4 +74361,4 @@ var App = function App() {
 
 ReactDOM.render(React.createElement(App, null), document.getElementById('root'));
 },{"react-app-polyfill/ie11":"lczo","@apollo/client":"mEz9","react":"1n8/","react-dom":"wLSN","../src":"68wG","../src/utils":"ocGl","./IconDisplay":"1BAa"}]},{},["zo2T"], null)
-//# sourceMappingURL=/example.64952887.js.map
+//# sourceMappingURL=/example.8000e309.js.map
