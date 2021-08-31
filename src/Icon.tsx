@@ -1,5 +1,6 @@
-import classnames from 'classnames';
 import React, { CSSProperties } from 'react';
+
+import classnames from 'classnames';
 
 import { useIcon } from './hook/useIcon';
 

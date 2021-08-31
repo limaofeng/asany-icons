@@ -1,9 +1,13 @@
+import { EventEmitter } from 'events';
+
 import { ApolloClient, gql } from '@apollo/client';
-import IconDatabase, { CheckPoint, IconDefinition, IconLibraryDefinition, IconTagDefinition } from './IconDatabase';
 import moment from 'moment';
 import xorWith from 'lodash/xorWith';
-import { EventEmitter } from 'events';
+
 import { parseIconFile, sleep } from '../utils';
+import { CheckPoint, IconDefinition, IconLibraryDefinition, IconTagDefinition } from '../typings';
+
+import IconDatabase from './IconDatabase';
 
 const db = new IconDatabase();
 const events = new EventEmitter();
@@ -22,7 +26,7 @@ const IMPORT_ICONS = gql`
   }
 `;
 
-const ALL_ICON_LIBRARIES = gql`
+export const ALL_ICON_LIBRARIES = gql`
   {
     libraries: iconLibraries {
       id
@@ -40,7 +44,7 @@ const ALL_ICON_LIBRARIES = gql`
   }
 `;
 
-const QUERY_CHECK_POINT = gql`
+export const QUERY_CHECK_POINT = gql`
   query oplogs($filter: OplogFilter) {
     oplogs(filter: $filter) {
       id
@@ -86,7 +90,7 @@ async function deltaKeys(logs: any[], table: Dexie.Table) {
     if (!lost) {
       continue;
     }
-    if (table.name == db.icons.name) {
+    if (table.name === db.icons.name) {
       if (!tags.has(lost.library)) {
         tags.set(lost.library, new Set<string>());
       }
@@ -95,12 +99,12 @@ async function deltaKeys(logs: any[], table: Dexie.Table) {
     }
     console.log('删除:', table.name, id);
     await table.delete(id);
-    if (table.name == db.libraries.name) {
+    if (table.name === db.libraries.name) {
       await db.tags.bulkDelete((await db.tags.where({ library: id }).toArray()).map(item => item.id!));
       await db.icons.bulkDelete((await db.icons.where({ library: id }).toArray()).map(item => item.id!));
     }
   }
-  if (table.name == db.icons.name) {
+  if (table.name === db.icons.name) {
     for (const [key, value] of tags) {
       parseTag([], key, Array.from(value));
     }
@@ -109,7 +113,7 @@ async function deltaKeys(logs: any[], table: Dexie.Table) {
   const updateIds = logs
     .filter(
       (item: any) =>
-        (item.operation === 'UPDATE' || item.operation == 'INSERT') && !removeIds.some(id => id === item.id)
+        (item.operation === 'UPDATE' || item.operation === 'INSERT') && !removeIds.some(id => id === item.id)
     )
     .map((item: any) => item.primarykeyValue);
   return updateIds;
@@ -120,7 +124,7 @@ async function deltaUpdates(items: any[], table: Dexie.Table) {
     const tags = new Map<string, Set<string>>();
     const lost = new Map<string, Set<string>>();
     for (const { __typename, ...item } of items) {
-      if (table.name == db.icons.name) {
+      if (table.name === db.icons.name) {
         if (!tags.has(item.library)) {
           tags.set(item.library, new Set<string>());
           lost.set(item.library, new Set<string>());
@@ -142,7 +146,7 @@ async function deltaUpdates(items: any[], table: Dexie.Table) {
         events.emit('icons:' + lib?.name + '/' + item.name, item);
       }
     }
-    if (table.name == db.icons.name) {
+    if (table.name === db.icons.name) {
       for (const [key, value] of tags) {
         const lostTags = xorWith(Array.from(value), Array.from(lost.get(key)!), Array.from(value));
         parseTag(Array.from(value), key, lostTags);
@@ -171,7 +175,6 @@ const updatePoint = async (time: Date, ...points: CheckPoint[]) => {
 };
 
 const saveLibrary = async ({ icons, __typename, ...lib }: any) => {
-  console.log('保存', db.libraries.name, lib.id, 'icons:', icons.length);
   await db.libraries.add({
     ...lib,
   });
@@ -306,7 +309,7 @@ class IconStore {
       },
     });
 
-    const liblogs = data.oplogs.filter((item: any) => item.entityName == 'IconLibrary');
+    const liblogs = data.oplogs.filter((item: any) => item.entityName === 'IconLibrary');
 
     const libIds = await deltaKeys(liblogs, db.libraries);
 
@@ -323,7 +326,7 @@ class IconStore {
       await deltaUpdates(libraries, db.libraries);
     }
 
-    const iconlogs = data.oplogs.filter((item: any) => item.entityName == 'Icon');
+    const iconlogs = data.oplogs.filter((item: any) => item.entityName === 'Icon');
 
     const iconIds = await deltaKeys(iconlogs, db.icons);
 
@@ -401,9 +404,9 @@ class IconStore {
     await deltaUpdates(data.icons, db.icons);
   }
   async addIcons(icons: IconCreateObject[], library: string = LOCAL_LIBRARY.id) {
-    const lib = await (library == LOCAL_LIBRARY.id ? this.local() : db.libraries.get(library));
+    const lib = await (library === LOCAL_LIBRARY.id ? this.local() : db.libraries.get(library));
     if (!lib) {
-      throw `库{${library}}未发现`;
+      throw new Error(`库{${library}}未发现`);
     }
 
     await deltaUpdates(

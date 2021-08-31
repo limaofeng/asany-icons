@@ -1,5 +1,7 @@
-import { withApollo, WithApolloClient } from '@apollo/client/react/hoc';
 import React, { useEffect, useMemo } from 'react';
+
+import { WithApolloClient, withApollo } from '@apollo/client/react/hoc';
+
 import IconStore from './store';
 
 import './index.less';
@@ -17,8 +19,9 @@ function IconProvider(props: WithApolloClient<IconProviderProps>) {
   useEffect(() => {
     store.setClient(client!);
     store.loadRemote();
-  }, []);
+  }, [client]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   return useMemo(() => <IconContext.Provider value={store}>{props.children}</IconContext.Provider>, []);
 }
 

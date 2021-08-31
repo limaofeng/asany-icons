@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
-import { IconDefinition } from '../store/IconDatabase';
+
+import { IconDefinition } from '../typings';
+
 import { useStore } from './useStore';
 
 export const useIcon = (name: string): string | undefined => {
@@ -22,6 +24,7 @@ export const useIcon = (name: string): string | undefined => {
       unsubscribe();
       _reject && _reject(`卸载图标:${name}`);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return icon?.content;

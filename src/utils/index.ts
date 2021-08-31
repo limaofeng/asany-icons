@@ -17,14 +17,14 @@ function loadSVGFile(file: any, options: IconParseOptions) {
         let imported = svg2ttf(buffer);
         // 设置单个字形名字
         if (imported.glyf && imported.glyf.length === 1) {
-          if (options.type == 'svg' && options.naturo) {
+          if (options.type === 'svg' && options.naturo) {
             return reject({ data: buffer });
           }
           imported.glyf[0].name = fName;
         }
         resolve(imported);
       } catch (exp) {
-        if (options.type == 'svg' && options.naturo) {
+        if (options.type === 'svg' && options.naturo) {
           reject({ err: exp, data: buffer });
         } else {
           reject(exp);
@@ -68,9 +68,8 @@ function loadTTFFile(file: any, option: any) {
 }
 
 const GLYF_ITEM_TPL =
-  '<svg width="1em" height="1em" viewbox="0 0 ${viewboxWidth} ${viewboxHeight}" fill="currentColor">' +
-  '<g transform="scale(${scale}, -${scale}) translate(${translateX}, -${translateY})"><path fill-opacity=".8" ${d}/></g>' +
-  '</svg>';
+  // eslint-disable-next-line no-template-curly-in-string
+  '<svg width="1em" height="1em" viewbox="0 0 ${viewboxWidth} ${viewboxHeight}" fill="currentColor"><g transform="scale(${scale}, -${scale}) translate(${translateX}, -${translateY})"><path fill-opacity=".8" ${d}/></g></svg>';
 
 const getGlyfHTML = (glyf: any, ttf: any, opt: any) => {
   let viewboxWidth = Math.floor(glyf.xMax + glyf.xMin / 2); // Math.floor(Math.max(glyf.xMax + glyf.xMin / 2, opt.unitsPerEm));
@@ -115,7 +114,7 @@ type IconParseOptions = {
  * @returns
  */
 export const parseIconFile = async (file: File, options: IconParseOptions = { naturo: false }) => {
-  const type = (/\.([^\.]+)$/.exec(file.name) || [])[1];
+  const type = (/\.([^.]+)$/.exec(file.name) || [])[1];
   let fName = file.name.replace(/\.\w+$/, '');
   options.type = type as any;
   options.filename = fName;
@@ -157,19 +156,17 @@ export const parseIconFile = async (file: File, options: IconParseOptions = { na
     console.log('解析', file.name, '发现', icons.length, '个图标');
     return icons;
   } catch (error) {
-    if (error.data) {
-      console.log(error.err);
-      return [
-        {
-          content: error.data.replace(/<svg[^>]*>/gi, (data: string) =>
-            data.replace(/(width|height)="((.*?))"/gi, '$1="1em"')
-          ),
-          name: fName,
-          tags: [],
-        },
-      ];
+    const data = (error as ParseIconFileError).data;
+    if (!data) {
+      throw error;
     }
-    throw error;
+    return [
+      {
+        content: data.replace(/<svg[^>]*>/gi, (data: string) => data.replace(/(width|height)="((.*?))"/gi, '$1="1em"')),
+        name: fName,
+        tags: [],
+      },
+    ];
   }
 };
 
