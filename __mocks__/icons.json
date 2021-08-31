@@ -1,0 +1,15 @@
+{
+  "data": {
+    "icons": [
+      {
+        "id": "25148",
+        "name": "us-la",
+        "tags": [],
+        "unicode": "$F207",
+        "content": "<svg width=\"1em\" height=\"1em\" viewbox=\"0 0 896 1024\" fill=\"currentColor\"><g transform=\"scale(2, -2) translate(0, -448)\"><path fill-opacity=\".8\" d=\"M65.5 350.5 q65.5 65.5 158.5 65.5 q93 0 158.5 -65.5 q65.5 -65.5 65.5 -158.5 q0 -93 -65.5 -158.5 q-65.5 -65.5 -158.5 -65.5 q-93 0 -158.5 65.5 q-65.5 65.5 -65.5 158.5 q0 93 65.5 158.5 ZM352 176 l0 32 l-256 0 l0 -32 l256 0 Z\"/></g></svg>",
+        "description": null,
+        "library": "767"
+      }
+    ]
+  }
+}

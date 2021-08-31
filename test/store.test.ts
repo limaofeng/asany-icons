@@ -18,7 +18,6 @@ beforeAll(() => {
 
 describe('it', () => {
   it('store loadRemote', async () => {
-    console.log('store', store);
     await store.loadRemote();
     await sleep(200);
     await store.loadRemote();
@@ -28,5 +27,12 @@ describe('it', () => {
     await store.local();
   });
 
-  it('renders without crashing', async () => {});
+  it('store libraries', async () => {
+    await store.libraries();
+    await store.libraries('762');
+  });
+
+  it('store get', async () => {
+    await store.get('NiftyLine/us-la');
+  });
 });

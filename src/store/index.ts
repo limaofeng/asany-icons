@@ -55,7 +55,7 @@ export const QUERY_CHECK_POINT = gql`
   }
 `;
 
-const QUERY_LIBRARIES = gql`
+export const QUERY_LIBRARIES = gql`
   query libraries($ids: [ID]) {
     libraries: iconLibraries(filter: { id_in: $ids }) {
       id
@@ -65,7 +65,7 @@ const QUERY_LIBRARIES = gql`
   }
 `;
 
-const QUERY_ICONS = gql`
+export const QUERY_ICONS = gql`
   query icons($ids: [ID]) {
     icons(filter: { id_in: $ids }) {
       id
@@ -137,13 +137,15 @@ async function deltaUpdates(items: any[], table: Dexie.Table) {
         console.log('新增:', table.name, item);
         table.add({ ...item });
       } else {
-        original.tags.forEach(lost.get(item.library)!.add, lost.get(item.library));
         console.log('更新', table.name, item);
+        if (table.name === db.icons.name) {
+          original.tags.forEach(lost.get(item.library)!.add, lost.get(item.library));
+        }
         table.update(item.id, { ...item });
       }
       if (table.name === db.icons.name) {
         const lib = await db.libraries.get(item.library);
-        events.emit('icons:' + lib?.name + '/' + item.name, item);
+        events.emit('icons:' + lib!.name + '/' + item.name, item);
       }
     }
     if (table.name === db.icons.name) {

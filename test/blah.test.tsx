@@ -3,8 +3,7 @@ import * as React from 'react';
 import { MockedProvider } from '@apollo/client/testing';
 import * as ReactDOM from 'react-dom';
 
-import IconProvider from '../src/IconProvider';
-import Icon from '../src/Icon';
+import { Icon, IconProvider } from '../src';
 import mocks from '../__mocks__/graphqlMock';
 import { sleep } from '../src/utils';
 
@@ -19,7 +18,7 @@ describe('it', () => {
       </MockedProvider>,
       div
     );
-    await sleep(5000);
     ReactDOM.unmountComponentAtNode(div);
+    await sleep(1000);
   });
 });
