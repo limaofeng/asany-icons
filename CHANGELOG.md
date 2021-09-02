@@ -1,3 +1,12 @@
+## [0.1.14](https://github.com/limaofeng/asany-icons/compare/v0.1.13...v0.1.14) (2021-09-02)
+
+
+### Bug Fixes
+
+* 编译错误 ([2325d03](https://github.com/limaofeng/asany-icons/commit/2325d0357bea5837f3b728835c4b24f07dfa2f40))
+
+
+
 ## [0.1.13](https://github.com/limaofeng/asany-icons/compare/v0.1.12...v0.1.13) (2021-09-02)
 
 
