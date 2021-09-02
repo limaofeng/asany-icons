@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { IconDefinition } from '../typings';
+import { IconDefinition } from '../../types';
 
 import { useStore } from './useStore';
 
