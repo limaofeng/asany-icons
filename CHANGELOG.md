@@ -1,3 +1,12 @@
+## [0.1.13](https://github.com/limaofeng/asany-icons/compare/v0.1.12...v0.1.13) (2021-09-02)
+
+
+### Features
+
+* :art: 将类型定义移动到 types 目录 ([a69e427](https://github.com/limaofeng/asany-icons/commit/a69e427bc278eb60ab86ce22775985b971900d2d))
+
+
+
 ## [0.1.12](https://github.com/limaofeng/asany-icons/compare/v0.1.11...v0.1.12) (2021-09-02)
 
 
