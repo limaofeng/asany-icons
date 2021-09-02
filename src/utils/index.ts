@@ -2,6 +2,8 @@ import font from 'fonteditor-core/lib/ttf/font';
 import glyf2svg from 'fonteditor-core/lib/ttf/util/glyf2svg';
 import string from 'fonteditor-core/lib/common/string';
 
+import { ParseIconFileError } from '../../types';
+
 function svg2ttf(buffer: any) {
   const options: any = { combinePath: true, type: 'svg' };
   return font.create(buffer, options).data;

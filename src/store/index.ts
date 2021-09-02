@@ -5,7 +5,7 @@ import moment from 'moment';
 import xorWith from 'lodash/xorWith';
 
 import { parseIconFile, sleep } from '../utils';
-import { CheckPoint, IconDefinition, IconLibraryDefinition, IconTagDefinition } from '../typings';
+import { CheckPoint, IconDefinition, IconLibraryDefinition, IconTagDefinition } from '../../types';
 
 import IconDatabase from './IconDatabase';
 

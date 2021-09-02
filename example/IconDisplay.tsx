@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { useEffect, useState } from 'react';
 
 import { Icon, useStore } from '../src';
-import { IconLibraryDefinition } from '../src/store/IconDatabase';
+import { IconLibraryDefinition } from '../types';
 
 function IconDisplay() {
   const store = useStore();

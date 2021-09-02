@@ -1,6 +1,6 @@
 import Dexie from 'dexie';
 
-import { CheckPoint, IconDefinition, IconLibraryDefinition, IconTagDefinition } from '../typings';
+import { CheckPoint, IconDefinition, IconLibraryDefinition, IconTagDefinition } from '../../types';
 
 class IconDatabase extends Dexie {
   public tags: Dexie.Table<IconTagDefinition, number>;

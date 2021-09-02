@@ -5,7 +5,8 @@
   "typings": "dist/index.d.ts",
   "files": [
     "dist",
-    "src"
+    "src",
+    "types"
   ],
   "engines": {
     "node": ">=10"
@@ -90,7 +91,8 @@
   "dependencies": {
     "classnames": "^2.3.1",
     "dexie": "^3.0.3",
-    "fonteditor-core": "^2.1.7"
+    "fonteditor-core": "^2.1.7",
+    "lodash": "^4.17.21"
   },
   "resolutions": {
     "**/@typescript-eslint/eslint-plugin": "^4.1.1",
