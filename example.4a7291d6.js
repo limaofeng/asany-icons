@@ -73771,24 +73771,6 @@ Object.defineProperty(exports, "useStore", {
     return _useStore.useStore;
   }
 });
-Object.defineProperty(exports, "IconDefinition", {
-  enumerable: true,
-  get: function () {
-    return _typings.IconDefinition;
-  }
-});
-Object.defineProperty(exports, "IconLibraryDefinition", {
-  enumerable: true,
-  get: function () {
-    return _typings.IconLibraryDefinition;
-  }
-});
-Object.defineProperty(exports, "IconTagDefinition", {
-  enumerable: true,
-  get: function () {
-    return _typings.IconTagDefinition;
-  }
-});
 
 var _Icon = _interopRequireDefault(require("./Icon"));
 
@@ -73800,14 +73782,12 @@ var _useIcon = require("./hook/useIcon");
 
 var _useStore = require("./hook/useStore");
 
-var _typings = require("./typings");
-
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./Icon":"LOf9","./utils":"ocGl","./IconProvider":"HTAU","./hook/useIcon":"yX21","./hook/useStore":"Z0zD","./typings":"/qMP"}],"1BAa":[function(require,module,exports) {
+},{"./Icon":"LOf9","./utils":"ocGl","./IconProvider":"HTAU","./hook/useIcon":"yX21","./hook/useStore":"Z0zD"}],"1BAa":[function(require,module,exports) {
 "use strict";
 
 var __createBinding = this && this.__createBinding || (Object.create ? function (o, m, k, k2) {
@@ -74361,4 +74341,4 @@ var App = function App() {
 
 ReactDOM.render(React.createElement(App, null), document.getElementById('root'));
 },{"react-app-polyfill/ie11":"lczo","@apollo/client":"mEz9","react":"1n8/","react-dom":"wLSN","../src":"68wG","../src/utils":"ocGl","./IconDisplay":"1BAa"}]},{},["zo2T"], null)
-//# sourceMappingURL=/example.8000e309.js.map
+//# sourceMappingURL=/example.4a7291d6.js.map
