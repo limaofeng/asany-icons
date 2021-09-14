@@ -73695,6 +73695,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _tslib = require("tslib");
+
 var _react = _interopRequireDefault(require("react"));
 
 var _classnames = _interopRequireDefault(require("classnames"));
@@ -73703,27 +73705,36 @@ var _useIcon = require("./hook/useIcon");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var DefaultIconContainer = function DefaultIconContainer(props) {
+  var className = props.className,
+      svg = props.svg;
+  return _react.default.createElement("span", (0, _tslib.__assign)({}, props, {
+    dangerouslySetInnerHTML: {
+      __html: svg
+    },
+    className: (0, _classnames.default)(className, "svg-icon")
+  }));
+};
+
 function Icon(props) {
   var name = props.name,
       onClick = props.onClick,
       className = props.className,
-      style = props.style;
+      style = props.style,
+      _a = props.container,
+      container = _a === void 0 ? DefaultIconContainer : _a;
   var svg = (0, _useIcon.useIcon)(name);
-  return _react.default.createElement("span", {
+  return _react.default.createElement(container, {
     onClick: onClick,
-    role: "img",
-    "aria-label": name,
+    svg: svg,
     style: style,
-    className: (0, _classnames.default)(className, "anyicon " + name),
-    dangerouslySetInnerHTML: {
-      __html: svg
-    }
+    className: className
   });
 }
 
 var _default = Icon;
 exports.default = _default;
-},{"react":"1n8/","classnames":"9qb7","./hook/useIcon":"yX21"}],"68wG":[function(require,module,exports) {
+},{"tslib":"vCxL","react":"1n8/","classnames":"9qb7","./hook/useIcon":"yX21"}],"68wG":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -74341,4 +74352,4 @@ var App = function App() {
 
 ReactDOM.render(React.createElement(App, null), document.getElementById('root'));
 },{"react-app-polyfill/ie11":"lczo","@apollo/client":"mEz9","react":"1n8/","react-dom":"wLSN","../src":"68wG","../src/utils":"ocGl","./IconDisplay":"1BAa"}]},{},["zo2T"], null)
-//# sourceMappingURL=/example.4a7291d6.js.map
+//# sourceMappingURL=/example.7cc3b837.js.map
