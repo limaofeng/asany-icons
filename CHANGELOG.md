@@ -1,3 +1,12 @@
+## [0.1.15](https://github.com/limaofeng/asany-icons/compare/v0.1.14...v0.1.15) (2021-09-14)
+
+
+### Features
+
+* 图标支持 container 自定义包装器 ([9fad3cf](https://github.com/limaofeng/asany-icons/commit/9fad3cfef1c7e05b258e98268d80a0ebabb533fb))
+
+
+
 ## [0.1.14](https://github.com/limaofeng/asany-icons/compare/v0.1.13...v0.1.14) (2021-09-02)
 
 
