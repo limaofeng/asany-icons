@@ -9,23 +9,35 @@ export interface IconProps {
   onClick?: (e: React.MouseEvent) => void;
   className?: string;
   style?: CSSProperties;
+  container?: React.ComponentType<any>;
 }
 
-function Icon(props: IconProps) {
-  let { name, onClick, className, style } = props;
-  const svg = useIcon(name);
+export interface IconContainerProps {
+  svg: string;
+}
+
+const DefaultIconContainer = (props: any) => {
+  let { className, svg } = props;
   return (
     <span
-      onClick={onClick}
-      role="img"
-      aria-label={name}
-      style={style}
-      className={classnames(className, `anyicon ${name}`)}
+      {...props}
       dangerouslySetInnerHTML={{
         __html: svg!,
       }}
+      className={classnames(className, `svg-icon`)}
     />
   );
+};
+
+function Icon(props: IconProps) {
+  let { name, onClick, className, style, container = DefaultIconContainer } = props;
+  const svg = useIcon(name);
+  return React.createElement(container, {
+    onClick,
+    svg,
+    style,
+    className,
+  });
 }
 
 export default Icon;
