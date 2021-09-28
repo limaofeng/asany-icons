@@ -13,7 +13,7 @@ class IconDatabase extends Dexie {
     this.version(1).stores({
       tags: '++id,path,name,library,parentPath,[path+library]',
       icons: '++id,name,library,unicode,tags,[library+name],[library+unicode]',
-      libraries: '++id,name',
+      libraries: '++id,name,type',
       checkpoints: 'id,name,time',
     });
     this.tags = this.table('tags');

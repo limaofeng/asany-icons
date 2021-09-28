@@ -260,6 +260,7 @@ const parseTag = async (tags: string[], library: string, lost: string[] = []) =>
 const LOCAL_LIBRARY = {
   id: '0',
   name: 'local',
+  type: 'local',
   description: '本地图标',
   icons: [],
 };
@@ -284,13 +285,13 @@ class IconStore {
 
       await saveLibrary(LOCAL_LIBRARY);
 
-      const { data } = await this._client!.query({
+      const { data } = await this._client!.query<{ libraries: IconLibraryDefinition[] }>({
         query: ALL_ICON_LIBRARIES,
       });
 
       await db.transaction('rw', db.libraries, db.icons, db.tags, async () => {
         for (const lib of data.libraries) {
-          await saveLibrary(lib);
+          await saveLibrary({ ...lib, type: 'remote' });
         }
       });
 
@@ -318,14 +319,17 @@ class IconStore {
     if (libIds.length) {
       const {
         data: { libraries },
-      } = await this._client!.query({
+      } = await this._client!.query<{ libraries: IconLibraryDefinition[] }>({
         query: QUERY_LIBRARIES,
         variables: {
           ids: libIds,
         },
       });
 
-      await deltaUpdates(libraries, db.libraries);
+      await deltaUpdates(
+        libraries.map(item => ({ ...item, type: 'remote' })),
+        db.libraries
+      );
     }
 
     const iconlogs = data.oplogs.filter((item: any) => item.entityName === 'Icon');

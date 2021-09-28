@@ -17,6 +17,7 @@ export interface IconDefinition {
 export interface IconLibraryDefinition {
   id?: string;
   name?: string;
+  type?: 'local' | 'remote';
   description?: string;
   tags: IconTagDefinition[];
   icons: IconDefinition[];
