@@ -72007,7 +72007,7 @@ var IconDatabase = function (_super) {
     _this.version(1).stores({
       tags: '++id,path,name,library,parentPath,[path+library]',
       icons: '++id,name,library,unicode,tags,[library+name],[library+unicode]',
-      libraries: '++id,name',
+      libraries: '++id,name,type',
       checkpoints: 'id,name,time'
     });
 
@@ -72910,6 +72910,7 @@ var parseTag = function parseTag(tags, library, lost) {
 var LOCAL_LIBRARY = {
   id: '0',
   name: 'local',
+  type: 'local',
   description: '本地图标',
   icons: []
 };
@@ -73012,7 +73013,9 @@ var IconStore = function () {
                       lib = _b.value;
                       return [4
                       /*yield*/
-                      , saveLibrary(lib)];
+                      , saveLibrary((0, _tslib.__assign)((0, _tslib.__assign)({}, lib), {
+                        type: 'remote'
+                      }))];
 
                     case 2:
                       _d.sent();
@@ -73118,7 +73121,11 @@ var IconStore = function () {
             libraries = _a.sent().data.libraries;
             return [4
             /*yield*/
-            , deltaUpdates(libraries, db.libraries)];
+            , deltaUpdates(libraries.map(function (item) {
+              return (0, _tslib.__assign)((0, _tslib.__assign)({}, item), {
+                type: 'remote'
+              });
+            }), db.libraries)];
 
           case 15:
             _a.sent();
@@ -74352,4 +74359,4 @@ var App = function App() {
 
 ReactDOM.render(React.createElement(App, null), document.getElementById('root'));
 },{"react-app-polyfill/ie11":"lczo","@apollo/client":"mEz9","react":"1n8/","react-dom":"wLSN","../src":"68wG","../src/utils":"ocGl","./IconDisplay":"1BAa"}]},{},["zo2T"], null)
-//# sourceMappingURL=/example.7cc3b837.js.map
+//# sourceMappingURL=/example.1bc82ab4.js.map
