@@ -456,6 +456,8 @@ class IconStore {
         db.libraries.update(id, { name: id, ...info, type: 'local' });
       });
     }
+    lib!.tags = await this.tags(id);
+    lib!.icons = await this.icons(id);
     return lib;
   }
 }
