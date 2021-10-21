@@ -73789,8 +73789,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var DefaultIconContainer = function DefaultIconContainer(props) {
   var className = props.className,
-      svg = props.svg;
-  return _react.default.createElement("span", (0, _tslib.__assign)({}, props, {
+      svg = props.svg,
+      otherProps = (0, _tslib.__rest)(props, ["className", "svg"]);
+  return _react.default.createElement("span", (0, _tslib.__assign)({}, otherProps, {
     dangerouslySetInnerHTML: {
       __html: svg
     },
@@ -74434,4 +74435,4 @@ var App = function App() {
 
 ReactDOM.render(React.createElement(App, null), document.getElementById('root'));
 },{"react-app-polyfill/ie11":"lczo","@apollo/client":"mEz9","react":"1n8/","react-dom":"wLSN","../src":"68wG","../src/utils":"ocGl","./IconDisplay":"1BAa"}]},{},["zo2T"], null)
-//# sourceMappingURL=/example.d4511c0b.js.map
+//# sourceMappingURL=/example.ac845ed3.js.map
