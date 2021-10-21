@@ -17,10 +17,10 @@ export interface IconContainerProps {
 }
 
 const DefaultIconContainer = (props: any) => {
-  let { className, svg } = props;
+  let { className, svg, ...otherProps } = props;
   return (
     <span
-      {...props}
+      {...otherProps}
       dangerouslySetInnerHTML={{
         __html: svg!,
       }}
