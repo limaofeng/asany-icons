@@ -24,7 +24,8 @@ describe('it', () => {
   }, 10000);
 
   it('store local', async () => {
-    await store.local();
+    await store.local('test');
+    await store.addIcons('test', '1.0', [{ name: 'test', svg: '123' }]);
   });
 
   it('store libraries', async () => {

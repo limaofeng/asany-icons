@@ -14,7 +14,7 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-store.addIcons([{ name: 'test', svg: '123' }]);
+store.addIcons('test', '1.0', [{ name: 'test', svg: '123' }]);
 
 const App = () => {
   const [svgs, setSvgs] = useState<string[]>([]);

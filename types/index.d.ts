@@ -36,5 +36,5 @@ export interface IconTagDefinition {
 export interface CheckPoint {
   id?: string;
   name: string;
-  time?: Date;
+  version?: Date | string;
 }

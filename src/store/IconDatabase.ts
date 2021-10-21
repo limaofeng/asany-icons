@@ -14,7 +14,7 @@ class IconDatabase extends Dexie {
       tags: '++id,path,name,library,parentPath,[path+library]',
       icons: '++id,name,library,unicode,tags,[library+name],[library+unicode]',
       libraries: '++id,name,type',
-      checkpoints: 'id,name,time',
+      checkpoints: 'id,name,version',
     });
     this.tags = this.table('tags');
     this.icons = this.table('icons');

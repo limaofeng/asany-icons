@@ -4,13 +4,14 @@ import { ApolloClient, gql } from '@apollo/client';
 import moment from 'moment';
 import xorWith from 'lodash/xorWith';
 
-import { parseIconFile, sleep } from '../utils';
+import { parseIconFile } from '../utils';
 import { CheckPoint, IconDefinition, IconLibraryDefinition, IconTagDefinition } from '../../types';
 
 import IconDatabase from './IconDatabase';
 
 const db = new IconDatabase();
 const events = new EventEmitter();
+events.setMaxListeners(1000);
 
 const IMPORT_ICONS = gql`
   mutation($library: ID!, $icons: [IconInput]!) {
@@ -158,18 +159,18 @@ async function deltaUpdates(items: any[], table: Dexie.Table) {
   events.emit('change');
 }
 
-const updatePoint = async (time: Date, ...points: CheckPoint[]) => {
+const updatePoint = async (time: Date | string, ...points: CheckPoint[]) => {
   db.transaction('rw', db.checkpoints, async () => {
     for (const point of points) {
       if (!!point.id) {
         await db.checkpoints.update(point.id, {
-          time,
+          version: time,
         });
       } else {
         await db.checkpoints.add({
           id: point.name.toLowerCase(),
           ...point,
-          time,
+          version: time,
         });
       }
     }
@@ -257,16 +258,14 @@ const parseTag = async (tags: string[], library: string, lost: string[] = []) =>
   }
 };
 
-const LOCAL_LIBRARY = {
-  id: '0',
-  name: 'local',
-  type: 'local',
-  description: '本地图标',
-  icons: [],
-};
-
 class IconStore {
   private _client?: ApolloClient<any>;
+
+  private _done?: () => void;
+
+  private _wiating = new Promise(resolve => {
+    this._done = resolve as any;
+  });
 
   setClient(client: ApolloClient<any>) {
     this._client = client;
@@ -283,7 +282,7 @@ class IconStore {
       await db.checkpoints.clear();
       await db.tags.clear();
 
-      await saveLibrary(LOCAL_LIBRARY);
+      this._done!();
 
       const { data } = await this._client!.query<{ libraries: IconLibraryDefinition[] }>({
         query: ALL_ICON_LIBRARIES,
@@ -299,6 +298,8 @@ class IconStore {
 
       await updatePoint(now, { name: 'icon' }, { name: 'library' });
       return;
+    } else {
+      this._done!();
     }
 
     // 查询增量数据
@@ -307,7 +308,7 @@ class IconStore {
       variables: {
         filter: {
           entityName_in: ['Icon', 'IconLibrary'],
-          createdAt_gt: moment(pointIcon.time).format('YYYY-MM-DD HH:mm:ss'),
+          createdAt_gt: moment(pointIcon.version).format('YYYY-MM-DD HH:mm:ss'),
         },
       },
     });
@@ -388,7 +389,7 @@ class IconStore {
     return () => events.off('icons:' + eventName, callback);
   }
   get(name: string): Promise<IconDefinition | undefined> {
-    const [library, icon] = name.includes('/') ? name.split('/') : [LOCAL_LIBRARY.name, name];
+    const [library, icon] = name.split('/');
     return db.transaction('readonly', db.libraries, db.icons, async () => {
       const lib = await db.libraries.where({ name: library }).first();
       if (!lib) {
@@ -409,12 +410,24 @@ class IconStore {
     });
     await deltaUpdates(data.icons, db.icons);
   }
-  async addIcons(icons: IconCreateObject[], library: string = LOCAL_LIBRARY.id) {
-    const lib = await (library === LOCAL_LIBRARY.id ? this.local() : db.libraries.get(library));
+  /**
+   * 添加图标到本地图标库
+   * @param icons 图标
+   * @param library 图标库ID
+   * @param version 版本
+   */
+  async addIcons(library: string, version: string, icons: IconCreateObject[]) {
+    const lib = await this.local(library);
     if (!lib) {
       throw new Error(`库{${library}}未发现`);
     }
-
+    let libCheckpoint = await db.checkpoints.get('library:' + library);
+    if (!libCheckpoint) {
+      db.checkpoints.add((libCheckpoint = { id: 'library:' + library, name: '本地库', version: '0' }));
+    }
+    if (version <= libCheckpoint.version!) {
+      return;
+    }
     await deltaUpdates(
       icons.map(({ svg: content, tags = [], ...item }) => ({
         ...item,
@@ -425,20 +438,24 @@ class IconStore {
       })),
       db.icons
     );
+    updatePoint(version, libCheckpoint);
   }
-  async local() {
-    let retry = 0,
-      lib = await db.libraries.get(LOCAL_LIBRARY.id);
-    if (!lib && retry < 5) {
-      await sleep(250);
-      lib = await db.libraries.get(LOCAL_LIBRARY.id);
-      retry++;
+  async local(id: string, info?: IconLibraryDefinition) {
+    await this._wiating;
+    let lib = await db.libraries.get(id);
+    if (lib?.type === 'remote') {
+      lib.tags = await this.tags(id);
+      lib.icons = await this.icons(id);
+      return lib;
     }
     if (!lib) {
-      return;
+      await saveLibrary({ name: id, ...info, id, type: 'local', icons: [] });
+      lib = await db.libraries.get(id);
+    } else if (!!lib && !!info) {
+      db.transaction('rw', db.libraries, async () => {
+        db.libraries.update(id, { name: id, ...info, type: 'local' });
+      });
     }
-    lib.tags = await this.tags(LOCAL_LIBRARY.id);
-    lib.icons = await this.icons(LOCAL_LIBRARY.id);
     return lib;
   }
 }

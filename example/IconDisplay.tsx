@@ -33,7 +33,9 @@ function IconDisplay() {
       {libraries.map(lib => (
         <div key={lib.id}>
           <div>
-            <h1 style={{ display: 'inline-block', marginRight: 16 }}>{lib.name}</h1>
+            <h1 style={{ display: 'inline-block', marginRight: 16 }}>
+              {lib.name}({lib.type}) - {lib.icons.length}
+            </h1>
             <span style={{ marginRight: 16 }}>{lib.description}</span>
             {lib.name !== 'local' && <input multiple type="file" onChange={handleFile(lib)} />}
           </div>
