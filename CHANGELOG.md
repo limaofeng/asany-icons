@@ -1,3 +1,12 @@
+## [0.2.1](https://github.com/limaofeng/asany-icons/compare/v0.2.0...v0.2.1) (2021-10-21)
+
+
+### Bug Fixes
+
+* local 需要返回 tags 与 icons ([fc9f023](https://github.com/limaofeng/asany-icons/commit/fc9f023670766fd3a89b07b143fd0df559a582d1))
+
+
+
 # [0.2.0](https://github.com/limaofeng/asany-icons/compare/v0.1.15...v0.2.0) (2021-10-21)
 
 
