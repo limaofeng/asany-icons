@@ -1,3 +1,13 @@
+# [0.2.0](https://github.com/limaofeng/asany-icons/compare/v0.1.15...v0.2.0) (2021-10-21)
+
+
+### Features
+
+* 优化本地库存储逻辑 ([daa8e6d](https://github.com/limaofeng/asany-icons/commit/daa8e6d4e16b6e693c4653666539a458fadd424d))
+* 图标库添加 type 字段 ([585d2fa](https://github.com/limaofeng/asany-icons/commit/585d2fa9280913bd3c24e37559f532c1864e9006))
+
+
+
 ## [0.1.15](https://github.com/limaofeng/asany-icons/compare/v0.1.14...v0.1.15) (2021-09-14)
 
 
