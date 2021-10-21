@@ -73545,26 +73545,26 @@ var IconStore = function () {
 
   IconStore.prototype.local = function (id, info) {
     return (0, _tslib.__awaiter)(this, void 0, void 0, function () {
-      var lib, _a, _b;
+      var lib, _a, _b, _c, _d;
 
       var _this = this;
 
-      return (0, _tslib.__generator)(this, function (_c) {
-        switch (_c.label) {
+      return (0, _tslib.__generator)(this, function (_e) {
+        switch (_e.label) {
           case 0:
             return [4
             /*yield*/
             , this._wiating];
 
           case 1:
-            _c.sent();
+            _e.sent();
 
             return [4
             /*yield*/
             , db.libraries.get(id)];
 
           case 2:
-            lib = _c.sent();
+            lib = _e.sent();
             if (!((lib === null || lib === void 0 ? void 0 : lib.type) === 'remote')) return [3
             /*break*/
             , 5];
@@ -73574,14 +73574,14 @@ var IconStore = function () {
             , this.tags(id)];
 
           case 3:
-            _a.tags = _c.sent();
+            _a.tags = _e.sent();
             _b = lib;
             return [4
             /*yield*/
             , this.icons(id)];
 
           case 4:
-            _b.icons = _c.sent();
+            _b.icons = _e.sent();
             return [2
             /*return*/
             , lib];
@@ -73601,14 +73601,14 @@ var IconStore = function () {
             }))];
 
           case 6:
-            _c.sent();
+            _e.sent();
 
             return [4
             /*yield*/
             , db.libraries.get(id)];
 
           case 7:
-            lib = _c.sent();
+            lib = _e.sent();
             return [3
             /*break*/
             , 9];
@@ -73631,9 +73631,23 @@ var IconStore = function () {
               });
             }
 
-            _c.label = 9;
+            _e.label = 9;
 
           case 9:
+            _c = lib;
+            return [4
+            /*yield*/
+            , this.tags(id)];
+
+          case 10:
+            _c.tags = _e.sent();
+            _d = lib;
+            return [4
+            /*yield*/
+            , this.icons(id)];
+
+          case 11:
+            _d.icons = _e.sent();
             return [2
             /*return*/
             , lib];
@@ -74420,4 +74434,4 @@ var App = function App() {
 
 ReactDOM.render(React.createElement(App, null), document.getElementById('root'));
 },{"react-app-polyfill/ie11":"lczo","@apollo/client":"mEz9","react":"1n8/","react-dom":"wLSN","../src":"68wG","../src/utils":"ocGl","./IconDisplay":"1BAa"}]},{},["zo2T"], null)
-//# sourceMappingURL=/example.2b4f1662.js.map
+//# sourceMappingURL=/example.d4511c0b.js.map
