@@ -72008,7 +72008,7 @@ var IconDatabase = function (_super) {
       tags: '++id,path,name,library,parentPath,[path+library]',
       icons: '++id,name,library,unicode,tags,[library+name],[library+unicode]',
       libraries: '++id,name,type',
-      checkpoints: 'id,name,time'
+      checkpoints: 'id,name,version'
     });
 
     _this.tags = _this.table('tags');
@@ -72049,6 +72049,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var db = new _IconDatabase.default();
 var events = new _events.EventEmitter();
+events.setMaxListeners(1000);
 var IMPORT_ICONS = (0, _client.gql)(templateObject_1 || (templateObject_1 = (0, _tslib.__makeTemplateObject)(["\n  mutation($library: ID!, $icons: [IconInput]!) {\n    icons: importIcons(library: $library, icons: $icons) {\n      id\n      name\n      tags\n      unicode\n      content\n      description\n      library: libraryId\n    }\n  }\n"], ["\n  mutation($library: ID!, $icons: [IconInput]!) {\n    icons: importIcons(library: $library, icons: $icons) {\n      id\n      name\n      tags\n      unicode\n      content\n      description\n      library: libraryId\n    }\n  }\n"])));
 var ALL_ICON_LIBRARIES = (0, _client.gql)(templateObject_2 || (templateObject_2 = (0, _tslib.__makeTemplateObject)(["\n  {\n    libraries: iconLibraries {\n      id\n      name\n      description\n      icons {\n        id\n        name\n        tags\n        unicode\n        content\n        description\n      }\n    }\n  }\n"], ["\n  {\n    libraries: iconLibraries {\n      id\n      name\n      description\n      icons {\n        id\n        name\n        tags\n        unicode\n        content\n        description\n      }\n    }\n  }\n"])));
 exports.ALL_ICON_LIBRARIES = ALL_ICON_LIBRARIES;
@@ -72400,7 +72401,7 @@ var updatePoint = function updatePoint(time) {
                 return [4
                 /*yield*/
                 , db.checkpoints.update(point.id, {
-                  time: time
+                  version: time
                 })];
 
               case 2:
@@ -72416,7 +72417,7 @@ var updatePoint = function updatePoint(time) {
                 , db.checkpoints.add((0, _tslib.__assign)((0, _tslib.__assign)({
                   id: point.name.toLowerCase()
                 }, point), {
-                  time: time
+                  version: time
                 }))];
 
               case 4:
@@ -72907,16 +72908,14 @@ var parseTag = function parseTag(tags, library, lost) {
   });
 };
 
-var LOCAL_LIBRARY = {
-  id: '0',
-  name: 'local',
-  type: 'local',
-  description: '本地图标',
-  icons: []
-};
-
 var IconStore = function () {
-  function IconStore() {}
+  function IconStore() {
+    var _this = this;
+
+    this._wiating = new Promise(function (resolve) {
+      _this._done = resolve;
+    });
+  }
 
   IconStore.prototype.setClient = function (client) {
     this._client = client;
@@ -72946,7 +72945,7 @@ var IconStore = function () {
             pointIcon = _a.sent();
             if (!(!libraryIcon || !pointIcon)) return [3
             /*break*/
-            , 11];
+            , 10];
             return [4
             /*yield*/
             , db.libraries.clear()];
@@ -72975,12 +72974,7 @@ var IconStore = function () {
           case 6:
             _a.sent();
 
-            return [4
-            /*yield*/
-            , saveLibrary(LOCAL_LIBRARY)];
-
-          case 7:
-            _a.sent();
+            this._done();
 
             return [4
             /*yield*/
@@ -72988,7 +72982,7 @@ var IconStore = function () {
               query: ALL_ICON_LIBRARIES
             })];
 
-          case 8:
+          case 7:
             data_1 = _a.sent().data;
             return [4
             /*yield*/
@@ -73062,7 +73056,7 @@ var IconStore = function () {
               });
             })];
 
-          case 9:
+          case 8:
             _a.sent();
 
             events.emit('change');
@@ -73074,12 +73068,17 @@ var IconStore = function () {
               name: 'library'
             })];
 
-          case 10:
+          case 9:
             _a.sent();
 
             return [2
             /*return*/
             ];
+
+          case 10:
+            this._done();
+
+            _a.label = 11;
 
           case 11:
             return [4
@@ -73089,7 +73088,7 @@ var IconStore = function () {
               variables: {
                 filter: {
                   entityName_in: ['Icon', 'IconLibrary'],
-                  createdAt_gt: (0, _moment.default)(pointIcon.time).format('YYYY-MM-DD HH:mm:ss')
+                  createdAt_gt: (0, _moment.default)(pointIcon.version).format('YYYY-MM-DD HH:mm:ss')
                 }
               }
             })];
@@ -73387,7 +73386,7 @@ var IconStore = function () {
   IconStore.prototype.get = function (name) {
     var _this = this;
 
-    var _a = (0, _tslib.__read)(name.includes('/') ? name.split('/') : [LOCAL_LIBRARY.name, name], 2),
+    var _a = (0, _tslib.__read)(name.split('/'), 2),
         library = _a[0],
         icon = _a[1];
 
@@ -73471,26 +73470,50 @@ var IconStore = function () {
       });
     });
   };
+  /**
+   * 添加图标到本地图标库
+   * @param icons 图标
+   * @param library 图标库ID
+   * @param version 版本
+   */
 
-  IconStore.prototype.addIcons = function (icons, library) {
-    if (library === void 0) {
-      library = LOCAL_LIBRARY.id;
-    }
 
+  IconStore.prototype.addIcons = function (library, version, icons) {
     return (0, _tslib.__awaiter)(this, void 0, void 0, function () {
-      var lib;
+      var lib, libCheckpoint;
       return (0, _tslib.__generator)(this, function (_a) {
         switch (_a.label) {
           case 0:
             return [4
             /*yield*/
-            , library === LOCAL_LIBRARY.id ? this.local() : db.libraries.get(library)];
+            , this.local(library)];
 
           case 1:
             lib = _a.sent();
 
             if (!lib) {
               throw new Error("\u5E93{" + library + "}\u672A\u53D1\u73B0");
+            }
+
+            return [4
+            /*yield*/
+            , db.checkpoints.get('library:' + library)];
+
+          case 2:
+            libCheckpoint = _a.sent();
+
+            if (!libCheckpoint) {
+              db.checkpoints.add(libCheckpoint = {
+                id: 'library:' + library,
+                name: '本地库',
+                version: '0'
+              });
+            }
+
+            if (version <= libCheckpoint.version) {
+              return [2
+              /*return*/
+              ];
             }
 
             return [4
@@ -73508,9 +73531,10 @@ var IconStore = function () {
               });
             }), db.icons)];
 
-          case 2:
+          case 3:
             _a.sent();
 
+            updatePoint(version, libCheckpoint);
             return [2
             /*return*/
             ];
@@ -73519,60 +73543,97 @@ var IconStore = function () {
     });
   };
 
-  IconStore.prototype.local = function () {
+  IconStore.prototype.local = function (id, info) {
     return (0, _tslib.__awaiter)(this, void 0, void 0, function () {
-      var retry, lib, _a, _b;
+      var lib, _a, _b;
+
+      var _this = this;
 
       return (0, _tslib.__generator)(this, function (_c) {
         switch (_c.label) {
           case 0:
-            retry = 0;
             return [4
             /*yield*/
-            , db.libraries.get(LOCAL_LIBRARY.id)];
+            , this._wiating];
 
           case 1:
-            lib = _c.sent();
-            if (!(!lib && retry < 5)) return [3
-            /*break*/
-            , 4];
-            return [4
-            /*yield*/
-            , (0, _utils.sleep)(250)];
-
-          case 2:
             _c.sent();
 
             return [4
             /*yield*/
-            , db.libraries.get(LOCAL_LIBRARY.id)];
+            , db.libraries.get(id)];
 
-          case 3:
+          case 2:
             lib = _c.sent();
-            retry++;
-            _c.label = 4;
-
-          case 4:
-            if (!lib) {
-              return [2
-              /*return*/
-              ];
-            }
-
+            if (!((lib === null || lib === void 0 ? void 0 : lib.type) === 'remote')) return [3
+            /*break*/
+            , 5];
             _a = lib;
             return [4
             /*yield*/
-            , this.tags(LOCAL_LIBRARY.id)];
+            , this.tags(id)];
 
-          case 5:
+          case 3:
             _a.tags = _c.sent();
             _b = lib;
             return [4
             /*yield*/
-            , this.icons(LOCAL_LIBRARY.id)];
+            , this.icons(id)];
+
+          case 4:
+            _b.icons = _c.sent();
+            return [2
+            /*return*/
+            , lib];
+
+          case 5:
+            if (!!lib) return [3
+            /*break*/
+            , 8];
+            return [4
+            /*yield*/
+            , saveLibrary((0, _tslib.__assign)((0, _tslib.__assign)({
+              name: id
+            }, info), {
+              id: id,
+              type: 'local',
+              icons: []
+            }))];
 
           case 6:
-            _b.icons = _c.sent();
+            _c.sent();
+
+            return [4
+            /*yield*/
+            , db.libraries.get(id)];
+
+          case 7:
+            lib = _c.sent();
+            return [3
+            /*break*/
+            , 9];
+
+          case 8:
+            if (!!lib && !!info) {
+              db.transaction('rw', db.libraries, function () {
+                return (0, _tslib.__awaiter)(_this, void 0, void 0, function () {
+                  return (0, _tslib.__generator)(this, function (_a) {
+                    db.libraries.update(id, (0, _tslib.__assign)((0, _tslib.__assign)({
+                      name: id
+                    }, info), {
+                      type: 'local'
+                    }));
+                    return [2
+                    /*return*/
+                    ];
+                  });
+                });
+              });
+            }
+
+            _c.label = 9;
+
+          case 9:
             return [2
             /*return*/
             , lib];
@@ -74045,7 +74106,7 @@ function IconDisplay() {
         display: 'inline-block',
         marginRight: 16
       }
-    }, lib.name), React.createElement("span", {
+    }, lib.name, "(", lib.type, ") - ", lib.icons.length), React.createElement("span", {
       style: {
         marginRight: 16
       }
@@ -74304,7 +74365,7 @@ var client = new client_1.ApolloClient({
   uri: 'https://api.asany.cn/graphql',
   cache: new client_1.InMemoryCache()
 });
-src_1.store.addIcons([{
+src_1.store.addIcons('test', '1.0', [{
   name: 'test',
   svg: '123'
 }]);
@@ -74359,4 +74420,4 @@ var App = function App() {
 
 ReactDOM.render(React.createElement(App, null), document.getElementById('root'));
 },{"react-app-polyfill/ie11":"lczo","@apollo/client":"mEz9","react":"1n8/","react-dom":"wLSN","../src":"68wG","../src/utils":"ocGl","./IconDisplay":"1BAa"}]},{},["zo2T"], null)
-//# sourceMappingURL=/example.1bc82ab4.js.map
+//# sourceMappingURL=/example.2b4f1662.js.map
