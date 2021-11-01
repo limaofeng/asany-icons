@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import { IconDefinition } from '../../types';
 
 import { useStore } from './useStore';
+
+const cache = new Map<string, any>();
 
 export const useIcon = (name: string): string | undefined => {
   const store = useStore();
@@ -19,6 +21,9 @@ export const useIcon = (name: string): string | undefined => {
       .catch(error => console.info(error));
     const unsubscribe = store.on(name, icon => {
       setIcon(icon);
+      if (!cache.has(name)) {
+        cache.set(name, icon);
+      }
     });
     return () => {
       unsubscribe();
@@ -27,5 +32,10 @@ export const useIcon = (name: string): string | undefined => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return icon?.content;
+  return useMemo(() => {
+    if (!icon || !icon.content) {
+      return cache.get(name);
+    }
+    return icon.content;
+  }, [name, icon]);
 };
