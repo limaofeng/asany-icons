@@ -1,3 +1,17 @@
+## [0.2.2](https://github.com/limaofeng/asany-icons/compare/v0.2.1...v0.2.2) (2021-11-01)
+
+
+### Bug Fixes
+
+* 避免 svg 属性被使用到 html 的属性中 ([39ec128](https://github.com/limaofeng/asany-icons/commit/39ec128fc2dab29e9a9b6dd0aad92e63184f0d4d))
+
+
+### Features
+
+* useIcon 添加 cache 逻辑，提高显示速度 ([2ba2ab7](https://github.com/limaofeng/asany-icons/commit/2ba2ab729422a7dffae8cd0d8759f0bfa76900f2))
+
+
+
 ## [0.2.1](https://github.com/limaofeng/asany-icons/compare/v0.2.0...v0.2.1) (2021-10-21)
 
 
