@@ -73739,6 +73739,8 @@ var _react = require("react");
 
 var _useStore = require("./useStore");
 
+var cache = new Map();
+
 var useIcon = function useIcon(name) {
   var store = (0, _useStore.useStore)();
 
@@ -73759,13 +73761,23 @@ var useIcon = function useIcon(name) {
     });
     var unsubscribe = store.on(name, function (icon) {
       setIcon(icon);
+
+      if (!cache.has(name)) {
+        cache.set(name, icon);
+      }
     });
     return function () {
       unsubscribe();
       _reject && _reject("\u5378\u8F7D\u56FE\u6807:" + name);
     }; // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  return icon === null || icon === void 0 ? void 0 : icon.content;
+  return (0, _react.useMemo)(function () {
+    if (!icon || !icon.content) {
+      return cache.get(name);
+    }
+
+    return icon.content;
+  }, [name, icon]);
 };
 
 exports.useIcon = useIcon;
@@ -74435,4 +74447,4 @@ var App = function App() {
 
 ReactDOM.render(React.createElement(App, null), document.getElementById('root'));
 },{"react-app-polyfill/ie11":"lczo","@apollo/client":"mEz9","react":"1n8/","react-dom":"wLSN","../src":"68wG","../src/utils":"ocGl","./IconDisplay":"1BAa"}]},{},["zo2T"], null)
-//# sourceMappingURL=/example.ac845ed3.js.map
+//# sourceMappingURL=/example.3855e5e6.js.map
