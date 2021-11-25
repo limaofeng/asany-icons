@@ -1,3 +1,12 @@
+## [0.2.3](https://github.com/limaofeng/asany-icons/compare/v0.2.2...v0.2.3) (2021-11-25)
+
+
+### Features
+
+* 解决 Dexie 升级到 3.2 后的问题 ([f030337](https://github.com/limaofeng/asany-icons/commit/f03033762b6a7bc19af718f5474f9845f4f1991b))
+
+
+
 ## [0.2.2](https://github.com/limaofeng/asany-icons/compare/v0.2.1...v0.2.2) (2021-11-01)
 
 
