@@ -3,6 +3,7 @@ import { EventEmitter } from 'events';
 import { ApolloClient, gql } from '@apollo/client';
 import moment from 'moment';
 import xorWith from 'lodash/xorWith';
+import Dexie from 'dexie';
 
 import { parseIconFile } from '../utils';
 import { CheckPoint, IconDefinition, IconLibraryDefinition, IconTagDefinition } from '../../types';
