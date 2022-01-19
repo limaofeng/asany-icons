@@ -1,3 +1,12 @@
+## [0.2.7](https://github.com/limaofeng/asany-icons/compare/v0.2.6...v0.2.7) (2022-01-19)
+
+
+### Bug Fixes
+
+* 优化解析字体到 svg 逻辑 ([5c5f33b](https://github.com/limaofeng/asany-icons/commit/5c5f33b906b9ff6acd9492859ad3273ffa10b030))
+
+
+
 ## [0.2.6](https://github.com/limaofeng/asany-icons/compare/v0.2.5...v0.2.6) (2022-01-19)
 
 
