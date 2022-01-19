@@ -1,3 +1,12 @@
+## [0.2.8](https://github.com/limaofeng/asany-icons/compare/v0.2.7...v0.2.8) (2022-01-19)
+
+
+### Bug Fixes
+
+* 解决图标组件不更新的BUG ([dcaced9](https://github.com/limaofeng/asany-icons/commit/dcaced97a0d969d2e9abee7feadecda6d316d225))
+
+
+
 ## [0.2.7](https://github.com/limaofeng/asany-icons/compare/v0.2.6...v0.2.7) (2022-01-19)
 
 
