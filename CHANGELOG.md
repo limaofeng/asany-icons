@@ -1,3 +1,12 @@
+## [0.2.6](https://github.com/limaofeng/asany-icons/compare/v0.2.5...v0.2.6) (2022-01-19)
+
+
+### Bug Fixes
+
+* 依赖引入问题 ([b8ffc07](https://github.com/limaofeng/asany-icons/commit/b8ffc0794b2f13e962ae827816430b49f1cabc70))
+
+
+
 ## [0.2.5](https://github.com/limaofeng/asany-icons/compare/v0.2.4...v0.2.5) (2022-01-19)
 
 
