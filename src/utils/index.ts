@@ -72,23 +72,21 @@ function loadTTFFile(file: any, option: any) {
 
 const GLYF_ITEM_TPL =
   // eslint-disable-next-line no-template-curly-in-string
-  '<svg width="1em" height="1em" viewbox="0 0 ${viewboxWidth} ${viewboxHeight}" fill="currentColor"><g transform="scale(${scale}, -${scale}) translate(${translateX}, -${translateY})"><path fill-opacity=".8" ${d}/></g></svg>';
+  '<svg width="1em" height="1em" viewbox="0 0 ${viewboxWidth} ${viewboxHeight}" fill="currentColor"><g transform="scale(1, -1) translate(${translateX}, -${translateY}) scale(1, 1)"><path fill-opacity=".8" ${d}/></g></svg>';
 
 const getGlyfHTML = (glyf: any, ttf: any, opt: any) => {
-  let viewboxWidth = Math.floor(glyf.xMax + glyf.xMin / 2); // Math.floor(Math.max(glyf.xMax + glyf.xMin / 2, opt.unitsPerEm));
-  const viewboxHeight = Math.max(glyf.yMax + glyf.yMin, opt.unitsPerEm);
-  const ratio = 1024 / opt.unitsPerEm;
+  let viewboxWidth = opt.unitsPerEm; // Math.floor(glyf.xMax + glyf.xMin / 2); // Math.floor(Math.max(glyf.xMax + glyf.xMin / 2, opt.unitsPerEm));
+  const viewboxHeight = opt.unitsPerEm; // Math.max(glyf.yMax + glyf.yMin, opt.unitsPerEm);
   let g: any = {
     index: opt.index,
     compound: glyf.compound ? 'compound' : '',
     selected: opt.selected ? 'selected' : '',
     editing: opt.editing ? 'editing' : '',
     modify: glyf.modify,
-    scale: ratio,
-    viewboxWidth: viewboxWidth * ratio,
-    viewboxHeight: viewboxHeight * ratio,
+    viewboxWidth: viewboxWidth,
+    viewboxHeight: viewboxHeight,
     unitsPerEm: opt.unitsPerEm,
-    translateX: 0, // Math.floor((viewboxWidth - (glyf.xMax + glyf.xMin / 2)) / 2),
+    translateX: 0,
     translateY: viewboxHeight + (opt.descent || 0),
     unicode: (glyf.unicode || [])
       .map(function(u: any) {
