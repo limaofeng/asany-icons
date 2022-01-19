@@ -4,7 +4,9 @@ import string from 'fonteditor-core/lib/common/string';
 
 import { ParseIconFileError } from '../../types';
 
-function svg2ttf(buffer: any) {
+const inflate = require('../dep/pako_inflate.min.js');
+
+function svg2ttf(buffer: any): any {
   const options: any = { combinePath: true, type: 'svg' };
   return font.create(buffer, options).data;
 }
@@ -45,7 +47,7 @@ function loadSVGFile(file: any, options: IconParseOptions) {
 
 function readttf(buffer: any, options: any) {
   if (options.type === 'woff') {
-    // options.inflate = inflate.inflate;
+    options.inflate = inflate.inflate;
   }
   let ttf = font.create(buffer, options).data;
   delete options.inflate;
