@@ -1,3 +1,12 @@
+## [0.2.5](https://github.com/limaofeng/asany-icons/compare/v0.2.4...v0.2.5) (2022-01-19)
+
+
+### Bug Fixes
+
+* 依赖引入使用 require 的 Bug ([9c362f0](https://github.com/limaofeng/asany-icons/commit/9c362f0b9fe1f221a46e00cfab22c682a85ea6c9))
+
+
+
 ## [0.2.4](https://github.com/limaofeng/asany-icons/compare/v0.2.3...v0.2.4) (2022-01-19)
 
 
