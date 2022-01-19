@@ -30,7 +30,7 @@ export const useIcon = (name: string): string | undefined => {
       _reject && _reject(`卸载图标:${name}`);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [name]);
 
   return useMemo(() => {
     if (!icon || !icon.content) {
