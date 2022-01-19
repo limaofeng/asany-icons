@@ -1,1 +1,1 @@
-export default require('../dep/pako_inflate.min.js');
+export default require('../src/dep/pako_inflate.min.js');
