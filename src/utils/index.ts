@@ -3,8 +3,7 @@ import glyf2svg from 'fonteditor-core/lib/ttf/util/glyf2svg';
 import string from 'fonteditor-core/lib/common/string';
 
 import { ParseIconFileError } from '../../types';
-
-const inflate = require('../dep/pako_inflate.min.js');
+import inflate from '../inflate';
 
 function svg2ttf(buffer: any): any {
   const options: any = { combinePath: true, type: 'svg' };
