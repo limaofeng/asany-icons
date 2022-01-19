@@ -1,3 +1,12 @@
+## [0.2.4](https://github.com/limaofeng/asany-icons/compare/v0.2.3...v0.2.4) (2022-01-19)
+
+
+### Bug Fixes
+
+* 解决解析 woff 字体时的错误 ([6cc9f65](https://github.com/limaofeng/asany-icons/commit/6cc9f658c401ac3a8d194ccfde0aacd69ef04e14))
+
+
+
 ## [0.2.3](https://github.com/limaofeng/asany-icons/compare/v0.2.2...v0.2.3) (2021-11-25)
 
 
