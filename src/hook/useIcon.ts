@@ -17,13 +17,14 @@ export const useIcon = (name: string): string | undefined => {
       _reject = reject;
     });
     Promise.race([delay, cancel])
-      .then(setIcon)
+      .then(item => {
+        setIcon(item);
+        cache.set(name, item);
+      })
       .catch(error => console.info(error));
     const unsubscribe = store.on(name, icon => {
       setIcon(icon);
-      if (!cache.has(name)) {
-        cache.set(name, icon);
-      }
+      cache.set(name, icon);
     });
     return () => {
       unsubscribe();
