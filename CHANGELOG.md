@@ -1,3 +1,12 @@
+## [0.2.9](https://github.com/limaofeng/asany-icons/compare/v0.2.8...v0.2.9) (2022-03-15)
+
+
+### Features
+
+* 修复缓存无效的问题 ([f902ec3](https://github.com/limaofeng/asany-icons/commit/f902ec3682ea95fd2d7ea20298f31575c16681e3))
+
+
+
 ## [0.2.8](https://github.com/limaofeng/asany-icons/compare/v0.2.7...v0.2.8) (2022-01-19)
 
 
