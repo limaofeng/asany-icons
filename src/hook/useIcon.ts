@@ -4,7 +4,7 @@ import { IconDefinition } from '../../types';
 
 import { useStore } from './useStore';
 
-const cache = new Map<string, any>();
+const cache = new Map<string, IconDefinition>();
 
 export const useIcon = (name: string): string | undefined => {
   const store = useStore();
@@ -19,7 +19,7 @@ export const useIcon = (name: string): string | undefined => {
     Promise.race([delay, cancel])
       .then(item => {
         setIcon(item);
-        cache.set(name, item);
+        cache.set(name, item!);
       })
       .catch(error => console.info(error));
     const unsubscribe = store.on(name, icon => {
@@ -35,7 +35,7 @@ export const useIcon = (name: string): string | undefined => {
 
   return useMemo(() => {
     if (!icon || !icon.content) {
-      return cache.get(name);
+      return cache.get(name)?.content;
     }
     return icon.content;
   }, [name, icon]);
