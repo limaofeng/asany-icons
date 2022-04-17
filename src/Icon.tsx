@@ -1,10 +1,10 @@
-import React, { CSSProperties } from 'react';
+import React, { CSSProperties, HTMLAttributes } from 'react';
 
 import classnames from 'classnames';
 
 import { useIcon } from './hook/useIcon';
 
-export interface IconProps {
+export interface IconProps extends HTMLAttributes<HTMLSpanElement> {
   name: string;
   onClick?: (e: React.MouseEvent) => void;
   className?: string;
@@ -30,9 +30,10 @@ const DefaultIconContainer = (props: any) => {
 };
 
 function Icon(props: IconProps) {
-  let { name, onClick, className, style, container = DefaultIconContainer } = props;
+  let { name, onClick, className, style, container = DefaultIconContainer, ...otherProps } = props;
   const svg = useIcon(name);
   return React.createElement(container, {
+    ...otherProps,
     onClick,
     svg,
     style,
