@@ -1,3 +1,12 @@
+## [0.2.11](https://github.com/limaofeng/asany-icons/compare/v0.2.10...v0.2.11) (2022-04-17)
+
+
+### Bug Fixes
+
+* 支持注入一般的 html 属性 ([7886d7f](https://github.com/limaofeng/asany-icons/commit/7886d7f8f9d1b7fda192b8a798502daef9daa8dc))
+
+
+
 ## [0.2.10](https://github.com/limaofeng/asany-icons/compare/v0.2.9...v0.2.10) (2022-03-15)
 
 
