@@ -1,3 +1,12 @@
+## [0.2.12](https://github.com/limaofeng/asany-icons/compare/v0.2.11...v0.2.12) (2022-04-18)
+
+
+### Bug Fixes
+
+* 组件 支持 React.forwardRef ([e312c06](https://github.com/limaofeng/asany-icons/commit/e312c062b2976cf6da3134ca460e370f7bae9ce5))
+
+
+
 ## [0.2.11](https://github.com/limaofeng/asany-icons/compare/v0.2.10...v0.2.11) (2022-04-17)
 
 
