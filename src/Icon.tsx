@@ -16,24 +16,26 @@ export interface IconContainerProps {
   svg: string;
 }
 
-const DefaultIconContainer = (props: any) => {
+const DefaultIconContainer = React.forwardRef((props: any, ref: any) => {
   let { className, svg, ...otherProps } = props;
   return (
     <span
       {...otherProps}
+      ref={ref}
       dangerouslySetInnerHTML={{
         __html: svg!,
       }}
       className={classnames(className, `svg-icon`)}
     />
   );
-};
+});
 
-function Icon(props: IconProps) {
+function Icon(props: IconProps, ref: any) {
   let { name, onClick, className, style, container = DefaultIconContainer, ...otherProps } = props;
   const svg = useIcon(name);
   return React.createElement(container, {
     ...otherProps,
+    ref,
     onClick,
     svg,
     style,
@@ -41,4 +43,4 @@ function Icon(props: IconProps) {
   });
 }
 
-export default Icon;
+export default React.forwardRef(Icon);
