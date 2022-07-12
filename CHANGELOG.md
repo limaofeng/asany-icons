@@ -1,3 +1,12 @@
+## [0.2.13](https://github.com/limaofeng/asany-icons/compare/v0.2.12...v0.2.13) (2022-07-12)
+
+
+### Features
+
+* 去掉不相关的样式 ([942c730](https://github.com/limaofeng/asany-icons/commit/942c73055c5cf95d7d062975090fafd1bba2024e))
+
+
+
 ## [0.2.12](https://github.com/limaofeng/asany-icons/compare/v0.2.11...v0.2.12) (2022-04-18)
 
 
