@@ -19,7 +19,7 @@ const mocks: MockedResponse<Record<string, any>>[] = [
     request: {
       query: QUERY_CHECK_POINT,
       variables: {
-        filter: {
+        where: {
           entityName_in: ['Icon', 'IconLibrary'],
           createdAt_gt: moment().format('YYYY-MM-DD HH:mm:ss'),
         },

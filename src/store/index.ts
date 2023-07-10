@@ -47,8 +47,8 @@ export const ALL_ICON_LIBRARIES = gql`
 `;
 
 export const QUERY_CHECK_POINT = gql`
-  query oplogs($filter: OplogFilter) {
-    oplogs(filter: $filter) {
+  query oplogs($where: OplogWhereInput) {
+    oplogs(where: $where) {
       id
       entityName
       operation
@@ -59,7 +59,7 @@ export const QUERY_CHECK_POINT = gql`
 
 export const QUERY_LIBRARIES = gql`
   query libraries($ids: [ID]) {
-    libraries: iconLibraries(filter: { id_in: $ids }) {
+    libraries: iconLibraries(where: { id_in: $ids }) {
       id
       name
       description
@@ -69,7 +69,7 @@ export const QUERY_LIBRARIES = gql`
 
 export const QUERY_ICONS = gql`
   query icons($ids: [ID]) {
-    icons(filter: { id_in: $ids }) {
+    icons(where: { id_in: $ids }) {
       id
       name
       tags
@@ -307,7 +307,7 @@ class IconStore {
     const { data } = await this._client!.query({
       query: QUERY_CHECK_POINT,
       variables: {
-        filter: {
+        where: {
           entityName_in: ['Icon', 'IconLibrary'],
           createdAt_gt: moment(pointIcon.version).format('YYYY-MM-DD HH:mm:ss'),
         },
