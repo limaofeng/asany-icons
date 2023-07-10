@@ -1,3 +1,12 @@
+## [0.2.14](https://github.com/limaofeng/asany-icons/compare/v0.2.13...v0.2.14) (2023-07-10)
+
+
+### Features
+
+* 接口调整 ([5745318](https://github.com/limaofeng/asany-icons/commit/57453182d00d005878b062dcf9f428dc2d6bc5bd))
+
+
+
 ## [0.2.13](https://github.com/limaofeng/asany-icons/compare/v0.2.12...v0.2.13) (2022-07-12)
 
 
