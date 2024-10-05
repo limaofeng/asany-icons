@@ -3,6 +3,7 @@ import React, { CSSProperties, HTMLAttributes } from 'react';
 import classnames from 'classnames';
 
 import { useIcon } from './hook/useIcon';
+import { useIconComponent } from './hook/useWrapperStrategy';
 
 export interface IconProps extends HTMLAttributes<HTMLSpanElement> {
   name: string;
@@ -13,31 +14,54 @@ export interface IconProps extends HTMLAttributes<HTMLSpanElement> {
 }
 
 export interface IconContainerProps {
-  svg: string;
+  content: string;
+}
+
+function getTagName(content: string) {
+  // 使用正则表达式匹配标签名称
+  const tagMatch = content.trim().match(/^<(\w+)/);
+
+  if (tagMatch) {
+    const tagName = tagMatch[1].toLowerCase();
+    if (tagName === 'svg') {
+      return 'svg';
+    } else if (tagName === 'i') {
+      return 'i';
+    } else {
+      return 'unknown';
+    }
+  } else {
+    return 'unknown';
+  }
 }
 
 const DefaultIconContainer = React.forwardRef((props: any, ref: any) => {
-  let { className, svg, ...otherProps } = props;
-  return (
-    <span
-      {...otherProps}
-      ref={ref}
-      dangerouslySetInnerHTML={{
-        __html: svg!,
-      }}
-      className={classnames(className, `svg-icon`)}
-    />
-  );
+  let { className, content, ...otherProps } = props;
+  const tagName = getTagName(content);
+  return React.createElement(tagName === 'svg' ? 'span' : 'i', {
+    ...otherProps,
+    ref,
+    dangerouslySetInnerHTML: {
+      __html: content,
+    },
+    className: classnames(className, { 'svg-icon': tagName === 'svg' }),
+  });
 });
 
 function Icon(props: IconProps, ref: any) {
-  let { name, onClick, className, style, container = DefaultIconContainer, ...otherProps } = props;
-  const svg = useIcon(name);
-  return React.createElement(container, {
+  let { name, onClick, className, style, container, ...otherProps } = props;
+
+  const [libName, iconName] = name.split('/');
+
+  const content = useIcon(name);
+  const IconComponent = useIconComponent(libName, iconName, content!);
+  const ComponentToRender: React.ElementType<any> =
+    ((IconComponent as unknown) as React.ElementType<any>) || DefaultIconContainer;
+  return React.createElement(ComponentToRender, {
     ...otherProps,
     ref,
     onClick,
-    svg,
+    content,
     style,
     className,
   });
