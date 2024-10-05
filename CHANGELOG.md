@@ -1,3 +1,12 @@
+# [0.3.0](https://github.com/limaofeng/asany-icons/compare/v0.2.14...v0.3.0) (2024-10-05)
+
+
+### Features
+
+* refactor Icon component to support different wrapper strategies ([ab98937](https://github.com/limaofeng/asany-icons/commit/ab98937085ee4cc7694ae140300cf1f917da3d3a))
+
+
+
 ## [0.2.14](https://github.com/limaofeng/asany-icons/compare/v0.2.13...v0.2.14) (2023-07-10)
 
 
