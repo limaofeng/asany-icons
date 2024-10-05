@@ -19,6 +19,10 @@ export interface IconContainerProps {
 
 function getTagName(content: string) {
   // 使用正则表达式匹配标签名称
+  if (!content) {
+    return 'unknown';
+  }
+
   const tagMatch = content.trim().match(/^<(\w+)/);
 
   if (tagMatch) {
@@ -38,7 +42,7 @@ function getTagName(content: string) {
 const DefaultIconContainer = React.forwardRef((props: any, ref: any) => {
   let { className, content, ...otherProps } = props;
   const tagName = getTagName(content);
-  return React.createElement(tagName === 'svg' ? 'span' : 'i', {
+  return React.createElement('span', {
     ...otherProps,
     ref,
     dangerouslySetInnerHTML: {
